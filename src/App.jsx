@@ -1,3 +1,4 @@
+import React from 'react';
 import { Link, NavLink, Route, Routes } from 'react-router-dom';
 
 function App() {
@@ -5,8 +6,8 @@ function App() {
     <div className="app-shell">
       <header className="site-header">
         <div>
-          <h1>Website Practice</h1>
-          <p className="site-subtitle">React scaffold for your future project pages.</p>
+          <h1>Prismatic's Website</h1>
+          <p className="site-subtitle">All of my website projects</p>
         </div>
         <nav className="top-nav" aria-label="Main navigation">
           <NavLink to="/" end>
