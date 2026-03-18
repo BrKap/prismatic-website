@@ -1,0 +1,46 @@
+.hero-summary-pills span,
+.tag-pill,
+.upgrade-pill,
+.rune-badge,
+.stat-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-summary-pills span,
+.tag-pill,
+.upgrade-pill,
+.rune-badge {
+  padding: 0.45rem 0.8rem;
+  border-radius: 999px;
+  background: rgba(126, 173, 255, 0.12);
+  border: 1px solid rgba(126, 173, 255, 0.22);
+}
+
+.stat-chip {
+  min-width: 190px;
+  padding: 0.75rem 0.9rem;
+  border: 1px solid #2a3446;
+  border-radius: 12px;
+  background: #121826;
+}
+
+.stat-chip-label {
+  display: block;
+  margin-bottom: 0.35rem;
+  font-size: 0.8rem;
+  opacity: 0.8;
+}
+
+.rune-badge {
+  min-height: 92px;
+  font-size: 1.15rem;
+  font-weight: 700;
+  background: radial-gradient(
+    circle at top,
+    rgba(181, 127, 255, 0.4),
+    rgba(64, 26, 91, 0.55)
+  );
+  border-color: rgba(201, 156, 255, 0.45);
+}

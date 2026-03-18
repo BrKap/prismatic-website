@@ -5,10 +5,10 @@ import {
   UNIT_LIBRARY,
 } from '../../constants/calculatorData';
 import {
-  calculateMockUnitDps,
   formatNumber,
   toNumber,
 } from '../../utils/calculatorHelpers';
+import { calculateMockUnitDps } from "../../utils/damageCalculation";
 
 export default function BuildUnitsTab({
   selectedUnitId,
@@ -45,7 +45,7 @@ export default function BuildUnitsTab({
         </label>
 
         <div className="unit-builder-actions">
-          <button className="primary-button" type="button" onClick={addUnit}>
+          <button className="primary-button add-button" type="button" onClick={addUnit}>
             Add Unit Entry
           </button>
         </div>

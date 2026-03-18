@@ -1,12 +1,15 @@
 import React, { useMemo } from 'react';
 import { DIFFICULTIES, GAME_MODES, RUNE_SLOTS, TITLES } from '../constants/calculatorData';
-import { calculateMockUnitDps, formatNumber } from '../utils/calculatorHelpers';
+import { formatNumber } from '../utils/calculatorHelpers';
+import { calculateMockUnitDps } from "../utils/damageCalculation";
 import { CheckboxField, InputField, NumberField } from '../../../../components/common/FormFields';
 import { StatTile } from '../../../../components/common/Stats';
 import {
   BuffPreviewCard,
+  CreepStatsCard,
   QuickStatsCard,
   RuneSummaryCard,
+  UnitRecipeCostCard,
 } from './MainSidebarCards';
 
 function summarizeUnits(units) {
@@ -196,7 +199,6 @@ export default function MainTab({
                 {summarizedUnits.map((unit) => (
                   <tr key={unit.key}>
                     <td className="unit-name-cell">{unit.name}</td>
-                    <td>{unit.race}</td>
                     <td>{formatNumber(unit.totalCount)}</td>
                     <td>{formatNumber(unit.variants)}</td>
                     <td>{formatNumber(unit.totalDps)}</td>
@@ -205,7 +207,7 @@ export default function MainTab({
 
                 {summarizedUnits.length === 0 && (
                   <tr>
-                    <td colSpan="5">
+                    <td colSpan="4">
                       <div className="empty-table-message">
                         No units in the build yet. Add detailed entries in the Build Units tab.
                       </div>
@@ -217,6 +219,11 @@ export default function MainTab({
           </div>
         </section>
       </div>
+
+      <aside className="calculator-sidebar right-sidebar">
+        <CreepStatsCard />
+        <UnitRecipeCostCard />
+      </aside>
     </div>
   );
 }

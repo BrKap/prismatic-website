@@ -1,0 +1,101 @@
+.unit-builder-top-row {
+  align-items: end;
+}
+
+.unit-builder-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: end;
+}
+
+.unit-builder-picker {
+  min-width: 260px;
+}
+
+.unit-builder-picker select {
+  min-width: 220px;
+}
+
+.build-units-table {
+  min-width: 1380px;
+}
+
+.build-units-table td,
+.build-units-table th {
+  white-space: nowrap;
+}
+
+.build-units-table .col-unit {
+  width: 240px;
+}
+
+.build-units-table .col-count {
+  width: 100px;
+}
+
+.build-units-table .col-rank {
+  width: 110px;
+}
+
+.build-units-table .col-level {
+  width: 90px;
+}
+
+.build-units-table .col-armor {
+  width: 120px;
+}
+
+.build-units-table .col-lb {
+  width: 90px;
+}
+
+.build-units-table .col-jewel {
+  width: 160px;
+}
+
+.build-units-table .col-damage {
+  width: 120px;
+}
+
+.build-units-table .col-speed {
+  width: 110px;
+}
+
+.build-units-table .col-hits {
+  width: 90px;
+}
+
+.build-units-table .col-dps {
+  width: 130px;
+}
+
+.build-units-table .col-full-dps {
+  width: 130px;
+}
+
+.build-units-table .col-actions {
+  width: 130px;
+}
+
+.build-units-table .table-input.input-xs {
+  min-width: 72px;
+}
+
+.build-units-table .table-input.input-sm {
+  min-width: 100px;
+}
+
+.build-units-table .table-input.input-md {
+  min-width: 150px;
+}
+
+.build-units-table .static-cell {
+  min-width: 70px;
+}
+
+.jewels-grid p,
+.config-card p,
+.upgrade-group-card p {
+  margin-bottom: 0;
+}

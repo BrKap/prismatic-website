@@ -1,0 +1,18 @@
+:root {
+  font-family: Arial, Helvetica, sans-serif;
+  color: #f5f7fb;
+  background: #10141c;
+
+  --text-color: #f5f7fb;
+  --muted-text: #c8d1de;
+  --page-bg: #10141c;
+  --page-bg-gradient: linear-gradient(180deg, #10141c 0%, #151d2b 100%);
+  --panel-bg: rgba(255, 255, 255, 0.04);
+  --panel-bg-soft: rgba(255, 255, 255, 0.03);
+  --panel-bg-strong: rgba(10, 14, 22, 0.75);
+  --panel-bg-active: #182235;
+  --table-header-bg: #172130;
+  --border-color: rgba(255, 255, 255, 0.12);
+  --border-color-soft: rgba(255, 255, 255, 0.08);
+  --accent-color: #6aa9ff;
+}

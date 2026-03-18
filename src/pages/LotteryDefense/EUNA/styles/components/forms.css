@@ -1,0 +1,101 @@
+.stacked-field,
+.stacked-checkbox-field,
+.inline-select-field {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.stacked-field input,
+.stacked-field select,
+.stacked-field textarea,
+.inline-select-field select,
+.unit-table input,
+.unit-table select,
+.table-input {
+  width: 100%;
+  background: var(--panel-bg-strong);
+  border: 1px solid var(--border-color);
+  color: var(--text-color);
+  border-radius: 10px;
+}
+
+.stacked-field input,
+.stacked-field select,
+.stacked-field textarea,
+.inline-select-field select {
+  padding: 0.65rem 0.75rem;
+}
+
+.table-input {
+  padding: 0.55rem 0.65rem;
+}
+
+.stacked-checkbox-field {
+  align-content: end;
+}
+
+.stacked-checkbox-field input {
+  width: 20px;
+  height: 20px;
+}
+
+.input-xs {
+  min-width: 64px;
+  max-width: 72px;
+}
+
+.input-sm {
+  min-width: 84px;
+  max-width: 96px;
+}
+
+.input-md {
+  min-width: 120px;
+  max-width: 140px;
+}
+
+.static-cell {
+  white-space: nowrap;
+  color: var(--text-color);
+  font-weight: 600;
+}
+
+.rune-slot-tile select {
+  width: 100%;
+  margin-top: 0.25rem;
+  padding: 0;
+  padding-right: 1.25rem;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: var(--text-color);
+  font-weight: 700;
+  font-size: 1rem;
+  line-height: 1.2;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  cursor: pointer;
+  box-shadow: none;
+  background-image:
+    linear-gradient(45deg, transparent 50%, #c8d1de 50%),
+    linear-gradient(135deg, #c8d1de 50%, transparent 50%);
+  background-position:
+    calc(100% - 10px) calc(50% - 2px),
+    calc(100% - 4px) calc(50% - 2px);
+  background-size: 6px 6px;
+  background-repeat: no-repeat;
+}
+
+.rune-slot-tile select:focus,
+.rune-slot-tile select:active {
+  outline: none;
+  border: none;
+  box-shadow: none;
+  background-color: transparent;
+}
+
+.rune-slot-tile select option {
+  background: #151d2b;
+  color: var(--text-color);
+}

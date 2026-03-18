@@ -1,0 +1,106 @@
+.card {
+  background: var(--panel-bg);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 18px;
+  padding: 1.5rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+.card h2,
+.card h3,
+.card h4 {
+  margin-top: 0;
+}
+
+.sidebar-card {
+  padding: 1.15rem;
+}
+
+.rune-slot-tile,
+.rune-details-grid div,
+.mini-stat-item,
+.info-row,
+.config-card,
+.upgrade-group-card,
+.stat-tile {
+  background: var(--panel-bg-soft);
+  border: 1px solid var(--border-color-soft);
+  border-radius: 12px;
+}
+
+.rune-slot-tile,
+.mini-stat-item,
+.info-row,
+.config-card,
+.upgrade-group-card {
+  padding: 0.8rem;
+}
+
+.stat-tile {
+  display: grid;
+  gap: 0.45rem;
+  padding: 1rem;
+}
+
+.stat-tile strong {
+  font-size: 1.2rem;
+}
+
+.stat-tile.blue {
+  border-color: rgba(86, 163, 255, 0.35);
+}
+
+.stat-tile.gold {
+  border-color: rgba(255, 206, 93, 0.35);
+}
+
+.stat-tile.purple {
+  border-color: rgba(190, 127, 255, 0.35);
+}
+
+.stat-tile.green {
+  border-color: rgba(103, 217, 150, 0.35);
+}
+
+/* Base button */
+.primary-button,
+.ghost-button {
+  border-radius: 12px;
+  padding: 0.7rem 1rem;
+  border: 1px solid var(--border-color);
+  background: var(--panel-bg);
+  color: var(--text-color);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+/* ===== ADD BUTTON (blue accent) ===== */
+.primary-button {
+  background: linear-gradient(
+    180deg,
+    rgba(88, 145, 255, 0.32) 0%,
+    rgba(88, 145, 255, 0.16) 100%
+  );
+  border-color: rgba(126, 173, 255, 0.45);
+}
+
+.primary-button:hover {
+  background: linear-gradient(
+    180deg,
+    rgba(88, 145, 255, 0.45) 0%,
+    rgba(88, 145, 255, 0.25) 100%
+  );
+  border-color: rgba(126, 173, 255, 0.7);
+}
+
+/* ===== REMOVE BUTTON (subtle red, not bright) ===== */
+.ghost-button.danger {
+  background: transparent;
+  border: 1px solid rgba(255, 120, 120, 0.25);
+  color: #ffb0b0;
+}
+
+.ghost-button.danger:hover {
+  background: rgba(255, 120, 120, 0.08);
+  border-color: rgba(255, 120, 120, 0.5);
+}

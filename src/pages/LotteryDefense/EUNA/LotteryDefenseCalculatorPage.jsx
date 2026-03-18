@@ -1,13 +1,14 @@
 import React, { useMemo, useState } from 'react';
+import './styles/ld-euna-index.css';
 import {
   TAB_OPTIONS,
   UNIT_LIBRARY,
 } from './constants/calculatorData';
 import {
   calculateMockRequiredDps,
-  calculateMockUnitDps,
-  createUnitEntry,
-} from './utils/calculatorHelpers';
+  calculateMockUnitDps
+} from "./utils/damageCalculation";
+import { createUnitEntry } from './utils/createUnitEntry';
 import CalculatorHero from './calculator/CalculatorHero';
 import CalculatorTabs from './calculator/CalculatorTabs';
 import MainTab from './calculator/MainTab';

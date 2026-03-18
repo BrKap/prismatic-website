@@ -1,0 +1,71 @@
+.sp-upgrades-layout {
+  display: grid;
+  grid-template-columns: 160px minmax(0, 1fr);
+  gap: 1rem;
+  align-items: start;
+}
+
+.sp-upgrade-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.sp-upgrade-side-tab {
+  width: 100%;
+  padding: 0.85rem 0.75rem;
+  border: 1px solid #2a3446;
+  border-radius: 12px;
+  background: #121826;
+  color: #e6edf7;
+  font-weight: 700;
+  text-align: center;
+  cursor: pointer;
+}
+
+.sp-upgrade-side-tab.is-active {
+  border-color: var(--accent-color);
+  background: var(--panel-bg-active);
+}
+
+.sp-upgrade-content {
+  min-width: 0;
+}
+
+.sp-upgrade-header {
+  align-items: flex-start;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.sp-upgrade-totals {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.sp-upgrade-input {
+  width: 88px;
+  padding: 0.45rem 0.55rem;
+  border: 1px solid #2a3446;
+  border-radius: 8px;
+  background: #0f1522;
+  color: inherit;
+}
+
+.sp-upgrade-footnote {
+  margin-top: 0.85rem;
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
+
+@media (max-width: 900px) {
+  .sp-upgrades-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .sp-upgrade-sidebar {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  }
+}

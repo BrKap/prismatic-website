@@ -1,0 +1,150 @@
+.unit-builder-top-row {
+  align-items: end;
+}
+
+.unit-builder-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: end;
+}
+
+.jewels-grid p,
+.config-card p,
+.upgrade-group-card p {
+  margin-bottom: 0;
+}
+
+.summary-table {
+  min-width: 760px;
+}
+
+.summary-table th,
+.summary-table td {
+  white-space: nowrap;
+  text-align: left;
+}
+
+.summary-table .unit-name-cell {
+  min-width: 260px;
+}
+
+.summary-table th:nth-child(2),
+.summary-table td:nth-child(2) {
+  width: 150px;
+}
+
+.summary-table th:nth-child(3),
+.summary-table td:nth-child(3) {
+  width: 130px;
+}
+
+.summary-table th:nth-child(4),
+.summary-table td:nth-child(4) {
+  width: 150px;
+}
+
+.empty-table-message {
+  padding: 1rem 0.5rem;
+  color: var(--muted-text);
+}
+
+.right-sidebar {
+  display: grid;
+  gap: 1rem;
+  align-content: start;
+}
+
+.creep-stats-grid .info-row {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.creep-stats-grid .info-row strong {
+  font-variant-numeric: tabular-nums;
+}
+
+.recipe-total-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--border-color-soft);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.recipe-total-row span {
+  color: #f6ef67;
+  font-weight: 700;
+}
+
+.recipe-total-row strong {
+  font-size: 1.1rem;
+}
+
+.recipe-groups {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.recipe-group-box {
+  border: 1px solid var(--border-color-soft);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.03);
+  overflow: hidden;
+}
+
+.recipe-row {
+  display: grid;
+  grid-template-columns: 1fr 72px;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.7rem 0.9rem;
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.12);
+}
+
+.recipe-row:last-child {
+  border-bottom: none;
+}
+
+.recipe-label {
+  font-weight: 700;
+}
+
+.recipe-label.blue {
+  color: #66b7e8;
+}
+
+.recipe-label.yellow {
+  color: #f3ef63;
+}
+
+.recipe-label.orange {
+  color: #f2aa34;
+}
+
+.recipe-label.red {
+  color: #ff5038;
+}
+
+.recipe-row strong {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.left-sidebar,
+.right-sidebar,
+.calculator-center-column {
+  min-width: 0;
+}
+
+.left-sidebar {
+  width: 100%;
+  max-width: 320px;
+}
+
+.right-sidebar {
+  width: 100%;
+  max-width: 330px;
+}
