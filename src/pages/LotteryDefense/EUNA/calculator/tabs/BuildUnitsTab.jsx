@@ -2,8 +2,8 @@ import React from 'react';
 import {
   JEWEL_OPTIONS,
   RANK_OPTIONS,
-  UNIT_LIBRARY,
-} from '../../constants/calculatorData';
+} from '../../constants/calculator/mainConstants';
+import { UNIT_LIBRARY } from "../../constants/calculator/unitConstants";
 import {
   formatNumber,
   toNumber,

@@ -1,9 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import './styles/ld-euna-index.css';
-import {
-  TAB_OPTIONS,
-  UNIT_LIBRARY,
-} from './constants/calculatorData';
+import { UNIT_LIBRARY } from "./constants/calculator/unitConstants";
+import { TAB_OPTIONS } from './constants/calculator/runeConstants';
 import {
   calculateMockRequiredDps,
   calculateMockUnitDps

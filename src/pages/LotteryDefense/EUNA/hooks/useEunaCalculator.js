@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { UNIT_LIBRARY } from '../constants/calculatorData';
+import { UNIT_LIBRARY } from "../constants/calculator/unitConstants";
 import { createUnitEntry } from '../utils/createUnitEntry';
 import {
   calculateMockRequiredDps,

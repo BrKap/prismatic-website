@@ -1,37 +1,12 @@
 import React, { useMemo, useState } from 'react';
-import { UPGRADE_GROUPS } from '../../constants/calculatorData';
-
-function getNextUpgradePrice(upgrade, investedCount) {
-  if (investedCount >= upgrade.maxInvestments) {
-    return 0;
-  }
-
-  return upgrade.basePrice + investedCount * upgrade.priceIncreasePerLevel;
-}
-
-function getTotalUpgradePrice(upgrade, investedCount) {
-  let total = 0;
-
-  for (let level = 0; level < investedCount; level += 1) {
-    total += upgrade.basePrice + level * upgrade.priceIncreasePerLevel;
-  }
-
-  return total;
-}
-
-function buildInitialInvestments() {
-  const initial = {};
-
-  UPGRADE_GROUPS.forEach((group) => {
-    initial[group.id] = {};
-
-    group.upgrades.forEach((upgrade) => {
-      initial[group.id][upgrade.id] = 0;
-    });
-  });
-
-  return initial;
-}
+import { UPGRADE_GROUPS } from '../../constants/calculator/spUpgradeConstants';
+import {
+  buildInitialInvestments,
+  calculateUpgradeTotals,
+  getNextUpgradePrice,
+  getTotalUpgradePrice,
+  sanitizeInvestmentValue,
+} from '../../utils/spUpgradeHelpers';
 
 export default function SpUpgradesTab() {
   const [activeGroupId, setActiveGroupId] = useState(UPGRADE_GROUPS[0]?.id ?? '');
@@ -41,33 +16,7 @@ export default function SpUpgradesTab() {
     UPGRADE_GROUPS.find((group) => group.id === activeGroupId) ?? UPGRADE_GROUPS[0];
 
   const totals = useMemo(() => {
-    let totalSpOverall = 0;
-    let totalEpOverall = 0;
-
-    const groupTotals = {};
-
-    UPGRADE_GROUPS.forEach((group) => {
-      let groupTotal = 0;
-
-      group.upgrades.forEach((upgrade) => {
-        const investedCount = investments[group.id]?.[upgrade.id] ?? 0;
-        groupTotal += getTotalUpgradePrice(upgrade, investedCount);
-      });
-
-      groupTotals[group.id] = groupTotal;
-
-      if (group.currency === 'EP') {
-        totalEpOverall += groupTotal;
-      } else {
-        totalSpOverall += groupTotal;
-      }
-    });
-
-    return {
-      totalSpOverall,
-      totalEpOverall,
-      groupTotals,
-    };
+    return calculateUpgradeTotals(investments);
   }, [investments]);
 
   function updateInvestment(groupId, upgradeId, nextValue) {
@@ -79,9 +28,7 @@ export default function SpUpgradesTab() {
         return current;
       }
 
-      const parsedValue = Number(nextValue);
-      const safeValue = Number.isNaN(parsedValue) ? 0 : parsedValue;
-      const clampedValue = Math.max(0, Math.min(upgrade.maxInvestments, safeValue));
+      const clampedValue = sanitizeInvestmentValue(upgrade, nextValue);
 
       return {
         ...current,
@@ -126,9 +73,7 @@ export default function SpUpgradesTab() {
         <div className="section-heading-row sp-upgrade-header">
           <div>
             <h3>{activeGroup.label} Upgrades</h3>
-            <p>
-              Track invested levels and costs before wiring full stat calculations.
-            </p>
+            <p>Track invested levels and costs before wiring full stat calculations.</p>
           </div>
 
           <div className="sp-upgrade-totals">

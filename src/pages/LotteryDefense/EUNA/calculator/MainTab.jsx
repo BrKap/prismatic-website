@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
-import { DIFFICULTIES, GAME_MODES, RUNE_SLOTS, TITLES } from '../constants/calculatorData';
+import { DIFFICULTIES, TITLES } from '../constants/calculator/mainConstants';
+import { GAME_MODES, RUNE_SLOTS } from '../constants/calculator/runeConstants';
 import { formatNumber } from '../utils/calculatorHelpers';
 import { calculateMockUnitDps } from "../utils/damageCalculation";
 import { CheckboxField, InputField, NumberField } from '../../../../components/common/FormFields';
@@ -152,12 +153,12 @@ export default function MainTab({
           <div className="overview-stats-grid">
             <StatTile
               label="Your DPS"
-              value={formatNumber(derivedStats.overallDps)}
+              value={formatNumber(derivedStats.overallDps ?? 0)}
               accent="blue"
             />
             <StatTile
               label="Required DPS"
-              value={formatNumber(derivedStats.requiredDps)}
+              value={formatNumber(derivedStats.requiredDps ?? 0)}
               accent="gold"
             />
             <StatTile
@@ -167,7 +168,7 @@ export default function MainTab({
             />
             <StatTile
               label="Total Units"
-              value={formatNumber(derivedStats.totalUnits)}
+              value={formatNumber(derivedStats.totalUnits ?? 0)}
               accent="green"
             />
           </div>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { RUNE_TYPES } from '../../constants/calculatorData';
+import { RUNE_TYPES } from '../../constants/calculator/runeConstants';
 
 export default function RunesTab() {
   return (

@@ -11,8 +11,8 @@ import {
   RUNE_LAYOUTS,
   RUNE_LEVEL_OPTIONS,
   RUNE_RACE_UPGRADE_OPTIONS,
-  RUNE_STAT_LEVEL_OPTIONS,
-} from '../constants/calculatorData';
+  RUNE_STAT_LEVEL_OPTIONS
+} from '../constants/calculator/runeConstants';
 
 function SelectValue({
   value,
