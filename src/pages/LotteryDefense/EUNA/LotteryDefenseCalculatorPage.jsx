@@ -2,10 +2,10 @@ import React, { useEffect, useMemo, useState } from 'react';
 import './styles/ld-euna-index.css';
 import { UNIT_LIBRARY } from "./constants/calculator/unitConstants";
 import {
-  TAB_OPTIONS,
   RUNE_SLOTS,
   createInitialRuneLoadouts,
 } from './constants/calculator/runeConstants';
+import { TAB_OPTIONS } from './constants/calculator/mainConstants';
 import { UPGRADE_GROUPS } from './constants/calculator/spUpgradeConstants';
 import {
   calculateMockRequiredDps,
@@ -201,18 +201,19 @@ export default function LotteryDefenseCalculatorPage() {
     if (sourceSlot === targetSlot) return;
 
     setRuneLoadouts((currentLoadouts) => {
-      const sourceRune = currentLoadouts.find((rune) => rune.slot === sourceSlot);
-      const targetRune = currentLoadouts.find((rune) => rune.slot === targetSlot);
-
-      if (!sourceRune || !targetRune) return currentLoadouts;
-
       return currentLoadouts.map((rune) => {
         if (rune.slot === sourceSlot) {
-          return { ...targetRune, slot: sourceSlot };
+          return {
+            ...rune,
+            slot: targetSlot,
+          };
         }
 
         if (rune.slot === targetSlot) {
-          return { ...sourceRune, slot: targetSlot };
+          return {
+            ...rune,
+            slot: sourceSlot,
+          };
         }
 
         return rune;

@@ -2,6 +2,11 @@
   padding: 0.9rem;
 }
 
+.rune-panel-card[draggable="true"]:active {
+  opacity: 0.6;
+  transform: scale(0.98);
+}
+
 .rune-panel-frame {
   border: 2px solid rgba(255, 255, 255, 0.16);
   background: rgba(255, 255, 255, 0.03);
@@ -37,7 +42,7 @@
 .rune-pink-select {
   width: 100%;
   min-width: 0;
-  padding: 0.35rem 1.75rem 0.35rem 0.5rem;
+  padding: 0.35rem 1.8rem 0.35rem 0.55rem;
   border: 1px solid var(--border-color);
   border-radius: 8px;
   background-color: var(--panel-bg-strong);
@@ -45,6 +50,7 @@
   -webkit-appearance: none;
   -moz-appearance: none;
   font-weight: 700;
+  font-size: 1rem;
   text-align: center;
   cursor: pointer;
   box-shadow: none;
@@ -167,7 +173,7 @@
 }
 
 .rune-stat-row {
-  grid-template-columns: minmax(0, 1fr) 56px 56px 56px;
+  grid-template-columns: minmax(0, 1fr) 74px 74px 74px;
 }
 
 .rune-stat-label,
@@ -181,7 +187,7 @@
 .rune-stat-col,
 .rune-enchant-level,
 .rune-enchant-value {
-  padding: 0.2rem 0.3rem;
+  padding: 0.2rem 0.4rem;
   text-align: center;
 }
 
@@ -215,7 +221,7 @@
 }
 
 .rune-enchant-row {
-  grid-template-columns: minmax(0, 1fr) 60px 60px;
+  grid-template-columns: minmax(0, 1fr) 74px 74px;
 }
 
 .rune-enchant-label,
@@ -226,7 +232,7 @@
 
 @media (max-width: 1200px) {
   .rune-stat-row {
-    grid-template-columns: 1.2fr 64px 64px 64px;
+    grid-template-columns: 1.2fr 74px 74px 74px;
   }
 }
 
@@ -259,3 +265,22 @@
   font-weight: 700;
   text-align: center;
 }
+
+.rune-dnd-wrapper {
+  position: relative;
+  will-change: transform;
+}
+
+.rune-drag-active {
+  z-index: 2;
+  transform: scale(1.02);
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.28);
+}
+
+.rune-drop-highlight {
+  outline: 2px solid #4aa3ff;
+  outline-offset: 4px;
+  border-radius: 12px;
+  background: rgba(74, 163, 255, 0.08);
+}
+

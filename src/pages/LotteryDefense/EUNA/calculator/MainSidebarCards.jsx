@@ -11,9 +11,11 @@ import {
   RUNE_LEVEL_OPTIONS,
   RUNE_RACE_UPGRADE_OPTIONS,
   RUNE_SLOTS,
-  RUNE_STAT_LEVEL_OPTIONS,
   RUNE_TYPES,
   createEmptyRuneData,
+  getRuneBaseOptions,
+  getRunePinkOptions,
+  getRuneYellowValue,
 } from '../constants/calculator/runeConstants';
 
 function SelectValue({
@@ -169,21 +171,23 @@ function RunePanelFrame({
 
             <div className="rune-stat-col">
               {renderCell(
-                `${row.id}Base`,
-                RUNE_STAT_LEVEL_OPTIONS,
+                row.baseField,
+                getRuneBaseOptions(row.statKey),
                 'rune-white-select'
               )}
             </div>
 
             <div className="rune-stat-col rune-yellow-value">
-              {row.yellowValue || '-'}
+              {row.hasLevelYellowBonus
+                ? getRuneYellowValue(row.statKey, normalizedRune.runeLevel)
+                : '-'}
             </div>
 
             <div className="rune-stat-col">
-              {row.pinkEnabled ? (
+              {row.pinkEnabled && row.bonusField ? (
                 renderCell(
-                  `${row.id}Bonus`,
-                  RUNE_STAT_LEVEL_OPTIONS,
+                  row.bonusField,
+                  getRunePinkOptions(row.statKey),
                   'rune-pink-select'
                 )
               ) : (
@@ -232,7 +236,7 @@ function RunePanelFrame({
 
             <div className="rune-enchant-level">
               {renderCell(
-                `enchant_${row.id}`,
+                row.field,
                 RUNE_ENCHANT_LEVEL_OPTIONS,
                 'rune-pink-select'
               )}
@@ -260,14 +264,14 @@ export function RuneSummaryCard({ settings, updateSetting, runeData }) {
   );
 }
 
-export function RuneEditorCard({ runeData, onFieldChange }) {
+export function RuneEditorCard({ runeData, onFieldChange, slotDisplayValue }) {
   return (
     <article className="card rune-panel-card">
       <RunePanelFrame
         runeData={runeData}
         editable={true}
         onFieldChange={onFieldChange}
-        slotValue={runeData.slot}
+        slotValue={slotDisplayValue ?? runeData.slot}
         onSlotChange={() => {}}
         showSlotDropdown={false}
       />

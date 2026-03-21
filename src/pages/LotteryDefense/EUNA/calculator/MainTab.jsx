@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { DIFFICULTIES, TITLES } from '../constants/calculator/mainConstants';
-import { GAME_MODES } from '../constants/calculator/runeConstants';
+import { GAME_MODES } from '../constants/calculator/mainConstants';
 import { formatNumber } from '../utils/calculatorHelpers';
 import { CheckboxField, InputField, NumberField } from '../../../../components/common/FormFields';
 import { StatTile } from '../../../../components/common/Stats';

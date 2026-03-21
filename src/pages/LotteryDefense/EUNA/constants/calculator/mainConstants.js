@@ -58,6 +58,7 @@ export const STAT_KEYS = {
   HEALTH_REDUCTION: 'healthReduction',
   MANA_REGEN: 'manaRegen',
   COOLDOWN: 'cooldown',
+  SP_PERCENT: 'spPercent',
   SP_BANK: 'spBank',
   OTHER: 'other',
 };
@@ -70,4 +71,17 @@ export const CURRENCY = {
 export const PROFILE = {
   XP: 'XP',
   SP_DONATION: 'SP Donation',
-}
+};
+
+export const GAME_MODES = ['Classic', 'Eternal', 'Hyper'];
+
+export const TAB_OPTIONS = [
+  { id: 'main', label: 'Main' },
+  { id: 'sp-upgrades', label: 'SP Upgrades' },
+  { id: 'runes', label: 'Runes' },
+  { id: 'jewels', label: 'Jewels' },
+  { id: 'buffs', label: 'Buffs' },
+  { id: 'build-units', label: 'Build Units' },
+  { id: 'presets', label: 'Presets' },
+];
+
