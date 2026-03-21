@@ -1,8 +1,7 @@
 import React, { useMemo } from 'react';
 import { DIFFICULTIES, TITLES } from '../constants/calculator/mainConstants';
-import { GAME_MODES, RUNE_SLOTS } from '../constants/calculator/runeConstants';
+import { GAME_MODES } from '../constants/calculator/runeConstants';
 import { formatNumber } from '../utils/calculatorHelpers';
-import { calculateMockUnitDps } from "../utils/damageCalculation";
 import { CheckboxField, InputField, NumberField } from '../../../../components/common/FormFields';
 import { StatTile } from '../../../../components/common/Stats';
 import {
@@ -48,6 +47,7 @@ export default function MainTab({
   derivedStats,
   units,
   updateSetting,
+  activeRune,
 }) {
   const summarizedUnits = useMemo(() => {
     return summarizeUnits(units);
@@ -59,7 +59,7 @@ export default function MainTab({
         <RuneSummaryCard
           settings={calculatorSettings}
           updateSetting={updateSetting}
-          runeSlots={RUNE_SLOTS}
+          runeData={activeRune}
         />
         <QuickStatsCard derivedStats={derivedStats} />
         <BuffPreviewCard />

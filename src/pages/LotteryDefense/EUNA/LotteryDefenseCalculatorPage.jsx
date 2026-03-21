@@ -1,12 +1,18 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import './styles/ld-euna-index.css';
 import { UNIT_LIBRARY } from "./constants/calculator/unitConstants";
-import { TAB_OPTIONS } from './constants/calculator/runeConstants';
+import {
+  TAB_OPTIONS,
+  RUNE_SLOTS,
+  createInitialRuneLoadouts,
+} from './constants/calculator/runeConstants';
+import { UPGRADE_GROUPS } from './constants/calculator/spUpgradeConstants';
 import {
   calculateMockRequiredDps,
   calculateMockUnitDps
 } from "./utils/damageCalculation";
 import { createUnitEntry } from './utils/createUnitEntry';
+import { buildInitialInvestments } from './utils/spUpgradeHelpers';
 import CalculatorHero from './calculator/CalculatorHero';
 import CalculatorTabs from './calculator/CalculatorTabs';
 import MainTab from './calculator/MainTab';
@@ -17,6 +23,8 @@ import BuffsTab from './calculator/tabs/BuffsTab';
 import PresetsTab from './calculator/tabs/PresetsTab';
 import BuildUnitsTab from './calculator/tabs/BuildUnitsTab';
 
+const STORAGE_KEY = 'ld-euna-calculator-state';
+
 const INITIAL_SETTINGS = {
   title: 'Rookie',
   difficulty: 'Practice',
@@ -26,22 +34,99 @@ const INITIAL_SETTINGS = {
   sp: 0,
   gameMode: 'Standard',
   tocMode: false,
-  runeSlot: 'Slot 1',
+  runeSlot: RUNE_SLOTS[0]?.value ?? 'slot-1',
   presetName: 'Default EUNA Preset',
 };
 
 const safeUnitLibrary = Array.isArray(UNIT_LIBRARY) ? UNIT_LIBRARY : [];
 const defaultUnit = safeUnitLibrary[0] ?? null;
 
+function loadSavedCalculatorState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+
+    if (!raw) {
+      return null;
+    }
+
+    return JSON.parse(raw);
+  } catch (error) {
+    console.error('Failed to load calculator state:', error);
+    return null;
+  }
+}
+
+function createDefaultUnits() {
+  return safeUnitLibrary
+    .filter((_, index) => [0, 1, 3].includes(index))
+    .map((unit) => createUnitEntry(unit));
+}
+
 export default function LotteryDefenseCalculatorPage() {
-  const [activeTab, setActiveTab] = useState('main');
-  const [selectedUnitId, setSelectedUnitId] = useState(defaultUnit?.id ?? '');
-  const [calculatorSettings, setCalculatorSettings] = useState(INITIAL_SETTINGS);
-  const [units, setUnits] = useState(
-    safeUnitLibrary
-      .filter((_, index) => [0, 1, 3].includes(index))
-      .map((unit) => createUnitEntry(unit))
-  );
+  const [activeTab, setActiveTab] = useState(() => {
+    const savedState = loadSavedCalculatorState();
+    return savedState?.activeTab ?? 'main';
+  });
+
+  const [selectedUnitId, setSelectedUnitId] = useState(() => {
+    const savedState = loadSavedCalculatorState();
+    return savedState?.selectedUnitId ?? defaultUnit?.id ?? '';
+  });
+
+  const [calculatorSettings, setCalculatorSettings] = useState(() => {
+    const savedState = loadSavedCalculatorState();
+    return {
+      ...INITIAL_SETTINGS,
+      ...(savedState?.calculatorSettings ?? {}),
+    };
+  });
+
+  const [units, setUnits] = useState(() => {
+    const savedState = loadSavedCalculatorState();
+    return savedState?.units ?? createDefaultUnits();
+  });
+
+  const [spActiveGroupId, setSpActiveGroupId] = useState(() => {
+    const savedState = loadSavedCalculatorState();
+    return savedState?.spActiveGroupId ?? UPGRADE_GROUPS[0]?.id ?? '';
+  });
+
+  const [spInvestments, setSpInvestments] = useState(() => {
+    const savedState = loadSavedCalculatorState();
+    return savedState?.spInvestments ?? buildInitialInvestments();
+  });
+
+  const [runeLoadouts, setRuneLoadouts] = useState(() => {
+    const savedState = loadSavedCalculatorState();
+    return savedState?.runeLoadouts ?? createInitialRuneLoadouts();
+  });
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify({
+          activeTab,
+          selectedUnitId,
+          calculatorSettings,
+          units,
+          spActiveGroupId,
+          spInvestments,
+          runeLoadouts,
+        })
+      );
+    } catch (error) {
+      console.error('Failed to save calculator state:', error);
+    }
+  }, [
+    activeTab,
+    selectedUnitId,
+    calculatorSettings,
+    units,
+    spActiveGroupId,
+    spInvestments,
+    runeLoadouts,
+  ]);
 
   const derivedStats = useMemo(() => {
     const overallDps = units.reduce((sum, unit) => {
@@ -62,6 +147,9 @@ export default function LotteryDefenseCalculatorPage() {
       uniqueUnits: units.length,
     };
   }, [calculatorSettings, units]);
+
+  const selectedRuneSlot = calculatorSettings.runeSlot ?? RUNE_SLOTS[0]?.value;
+  const activeRune = runeLoadouts.find((rune) => rune.slot === selectedRuneSlot) ?? runeLoadouts[0];
 
   const addUnit = () => {
     if (!safeUnitLibrary.length) return;
@@ -96,6 +184,42 @@ export default function LotteryDefenseCalculatorPage() {
     }));
   };
 
+  const updateRuneLoadout = (slot, field, value) => {
+    setRuneLoadouts((currentLoadouts) =>
+      currentLoadouts.map((rune) =>
+        rune.slot !== slot
+          ? rune
+          : {
+              ...rune,
+              [field]: value,
+            }
+      )
+    );
+  };
+
+  const swapRuneLoadouts = (sourceSlot, targetSlot) => {
+    if (sourceSlot === targetSlot) return;
+
+    setRuneLoadouts((currentLoadouts) => {
+      const sourceRune = currentLoadouts.find((rune) => rune.slot === sourceSlot);
+      const targetRune = currentLoadouts.find((rune) => rune.slot === targetSlot);
+
+      if (!sourceRune || !targetRune) return currentLoadouts;
+
+      return currentLoadouts.map((rune) => {
+        if (rune.slot === sourceSlot) {
+          return { ...targetRune, slot: sourceSlot };
+        }
+
+        if (rune.slot === targetSlot) {
+          return { ...sourceRune, slot: targetSlot };
+        }
+
+        return rune;
+      });
+    });
+  };
+
   return (
     <section className="calculator-page">
       <CalculatorHero settings={calculatorSettings} />
@@ -112,11 +236,28 @@ export default function LotteryDefenseCalculatorPage() {
           removeUnit={removeUnit}
           updateUnit={updateUnit}
           updateSetting={updateSetting}
+          runeLoadouts={runeLoadouts}
+          activeRune={activeRune}
         />
       )}
 
-      {activeTab === 'sp-upgrades' && <SpUpgradesTab />}
-      {activeTab === 'runes' && <RunesTab />}
+      {activeTab === 'sp-upgrades' && (
+        <SpUpgradesTab
+          activeGroupId={spActiveGroupId}
+          setActiveGroupId={setSpActiveGroupId}
+          investments={spInvestments}
+          setInvestments={setSpInvestments}
+        />
+      )}
+
+      {activeTab === 'runes' && (
+        <RunesTab
+          runeLoadouts={runeLoadouts}
+          updateRuneLoadout={updateRuneLoadout}
+          swapRuneLoadouts={swapRuneLoadouts}
+        />
+      )}
+
       {activeTab === 'jewels' && <JewelsTab />}
       {activeTab === 'buffs' && <BuffsTab />}
       {activeTab === 'presets' && (
@@ -138,3 +279,5 @@ export default function LotteryDefenseCalculatorPage() {
     </section>
   );
 }
+
+

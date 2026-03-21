@@ -1,6 +1,5 @@
 import React from 'react';
 import { InfoRow, MiniStat } from '../../../../components/common/Stats';
-import { formatNumber } from '../utils/calculatorHelpers';
 import {
   RUNE_AWAKENING_OPTIONS,
   RUNE_BONUS_FIFTEEN_OPTIONS,
@@ -11,7 +10,10 @@ import {
   RUNE_LAYOUTS,
   RUNE_LEVEL_OPTIONS,
   RUNE_RACE_UPGRADE_OPTIONS,
-  RUNE_STAT_LEVEL_OPTIONS
+  RUNE_SLOTS,
+  RUNE_STAT_LEVEL_OPTIONS,
+  RUNE_TYPES,
+  createEmptyRuneData,
 } from '../constants/calculator/runeConstants';
 
 function SelectValue({
@@ -41,164 +43,235 @@ function SelectValue({
   );
 }
 
-export function RuneSummaryCard({ settings, updateSetting, runeSlots }) {
-  const runeType = settings.runeType ?? 'Cosmos';
-  const runeLayout = RUNE_LAYOUTS[runeType] ?? RUNE_LAYOUTS.Final;
-  const runeIcon = RUNE_ICON_BY_TYPE[runeType] ?? '';
+function DisplayValue({ value, className = '', placeholder = '-' }) {
+  const displayValue = value === undefined || value === null || value === ''
+    ? placeholder
+    : value;
+
+  return <div className={`rune-display-value ${className}`.trim()}>{displayValue}</div>;
+}
+
+function getRuneLayout(runeType) {
+  const normalizedType = (runeType || 'cosmos').toLowerCase();
+  return RUNE_LAYOUTS[normalizedType] ?? RUNE_LAYOUTS.cosmos;
+}
+
+function getRuneIcon(runeType) {
+  const normalizedType = (runeType || 'cosmos').toLowerCase();
+  return RUNE_ICON_BY_TYPE[normalizedType] ?? '';
+}
+
+function normalizeRuneData(runeData) {
+  return {
+    ...createEmptyRuneData(runeData?.slot ?? RUNE_SLOTS[0]?.value),
+    ...(runeData ?? {}),
+  };
+}
+
+function RunePanelFrame({
+  runeData,
+  editable,
+  onFieldChange,
+  slotValue,
+  onSlotChange,
+  showSlotDropdown = true,
+}) {
+  const normalizedRune = normalizeRuneData(runeData);
+  const runeType = (normalizedRune.runeType || 'cosmos').toLowerCase();
+  const runeLayout = getRuneLayout(runeType);
+  const runeIcon = getRuneIcon(runeType);
+
+  const renderCell = (field, options, className = '', fallback = '-') => {
+    if (editable) {
+      return (
+        <SelectValue
+          value={normalizedRune[field]}
+          options={options}
+          onChange={(value) => onFieldChange(field, value)}
+          className={className}
+        />
+      );
+    }
+
+    const value = normalizedRune[field];
+    return <DisplayValue value={value} className={className} placeholder={fallback} />;
+  };
 
   return (
-    <section className="card sidebar-card rune-panel-card">
-      <div className="rune-panel-frame">
-        <div className="rune-panel-top">
-          <div className="rune-slot-box">
-            <span className="rune-slot-label">Slot</span>
+    <div className="rune-panel-frame">
+      <div className="rune-panel-top">
+        <div className="rune-slot-box">
+          <span className="rune-slot-label">Slot</span>
+
+          {showSlotDropdown ? (
             <SelectValue
-              value={settings.runeSlot}
-              options={runeSlots.map((slot) => ({ value: slot, label: slot }))}
-              onChange={(value) => updateSetting('runeSlot', value)}
+              value={slotValue ?? normalizedRune.slot}
+              options={RUNE_SLOTS}
+              onChange={onSlotChange}
               className="rune-slot-select"
             />
-          </div>
-          <div className="rune-icon-box">
+          ) : (
+            <div className="rune-slot-static">
+              {RUNE_SLOTS.find((slot) => slot.value === (slotValue ?? normalizedRune.slot))?.label ?? '-'}
+            </div>
+          )}
+        </div>
 
-            <div className="rune-icon-shell">
-              {runeIcon ? (
-                <img src={runeIcon} alt={runeType} className="rune-icon-image" />
+        <div className="rune-icon-box">
+          <div className="rune-icon-shell">
+            {runeIcon ? (
+              <img src={runeIcon} alt={runeType} className="rune-icon-image" />
+            ) : (
+              <div className="rune-icon-fallback">{runeType}</div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      <div className="rune-meta-grid">
+        <div className="rune-meta-cell">
+          <span>Rune Type</span>
+          {editable ? (
+            <SelectValue
+              value={runeType}
+              options={RUNE_TYPES}
+              onChange={(value) => onFieldChange('runeType', value)}
+              className="rune-white-select"
+            />
+          ) : (
+            <DisplayValue value={runeType} className="rune-white-select" />
+          )}
+        </div>
+
+        <div className="rune-meta-cell">
+          <span>Rune Lvl</span>
+          {renderCell(
+            'runeLevel',
+            RUNE_LEVEL_OPTIONS,
+            'rune-white-select'
+          )}
+        </div>
+
+        <div className="rune-meta-cell">
+          <span>Awakening</span>
+          {renderCell(
+            'runeAwakening',
+            RUNE_AWAKENING_OPTIONS,
+            'rune-cyan-select'
+          )}
+        </div>
+      </div>
+
+      <div className="rune-primary-grid">
+        {runeLayout.primaryRows.map((row) => (
+          <div key={row.id} className="rune-stat-row">
+            <div className="rune-stat-label">{row.label}</div>
+
+            <div className="rune-stat-col">
+              {renderCell(
+                `${row.id}Base`,
+                RUNE_STAT_LEVEL_OPTIONS,
+                'rune-white-select'
+              )}
+            </div>
+
+            <div className="rune-stat-col rune-yellow-value">
+              {row.yellowValue || '-'}
+            </div>
+
+            <div className="rune-stat-col">
+              {row.pinkEnabled ? (
+                renderCell(
+                  `${row.id}Bonus`,
+                  RUNE_STAT_LEVEL_OPTIONS,
+                  'rune-pink-select'
+                )
               ) : (
-                <div className="rune-icon-fallback">{runeType}</div>
+                <span className="rune-empty-cell">-</span>
               )}
             </div>
           </div>
+        ))}
+      </div>
+
+      <div className="rune-bonus-grid">
+        <div className="rune-bonus-row">
+          <div className="rune-bonus-label rune-green-text">Race Upgrade +1</div>
+          {renderCell(
+            'runeRaceUpgrade',
+            RUNE_RACE_UPGRADE_OPTIONS,
+            'rune-green-select'
+          )}
         </div>
 
-        <div className="rune-meta-grid">
-          <div className="rune-meta-cell">
-            <span>Rune Lvl</span>
-            <SelectValue
-              value={settings.runeLevel ?? 15}
-              options={RUNE_LEVEL_OPTIONS.map((value) => ({
-                value,
-                label: value,
-              }))}
-              onChange={(value) => updateSetting('runeLevel', Number(value))}
-              className="rune-white-select"
-            />
-          </div>
-
-          <div className="rune-meta-cell">
-            <span>Awakening</span>
-            <SelectValue
-              value={settings.runeAwakening ?? 'None'}
-              options={RUNE_AWAKENING_OPTIONS}
-              onChange={(value) => updateSetting('runeAwakening', value)}
-              className="rune-cyan-select"
-            />
-          </div>
+        <div className="rune-bonus-row">
+          <div className="rune-bonus-label rune-yellow-text">+10 bonus</div>
+          {renderCell(
+            'runeBonusTen',
+            RUNE_BONUS_TEN_OPTIONS,
+            'rune-yellow-select'
+          )}
         </div>
 
-        <div className="rune-primary-grid">
-          {runeLayout.primaryRows.map((row) => (
-            <div key={row.id} className="rune-stat-row">
-              <div className="rune-stat-label">{row.label}</div>
-
-              <div className="rune-stat-col">
-                <SelectValue
-                  value={settings[`rune_${row.id}_base`] ?? 0}
-                  options={RUNE_STAT_LEVEL_OPTIONS.map((value) => ({
-                    value,
-                    label: value,
-                  }))}
-                  onChange={(value) =>
-                    updateSetting(`rune_${row.id}_base`, Number(value))
-                  }
-                  className="rune-white-select"
-                />
-              </div>
-
-              <div className="rune-stat-col rune-yellow-value">
-                {row.yellowValue || '-'}
-              </div>
-
-              <div className="rune-stat-col">
-                {row.pinkEnabled ? (
-                  <SelectValue
-                    value={settings[`rune_${row.id}_bonus`] ?? 0}
-                    options={RUNE_STAT_LEVEL_OPTIONS.map((value) => ({
-                      value,
-                      label: value,
-                    }))}
-                    onChange={(value) =>
-                      updateSetting(`rune_${row.id}_bonus`, Number(value))
-                    }
-                    className="rune-pink-select"
-                  />
-                ) : (
-                  <span className="rune-empty-cell">-</span>
-                )}
-              </div>
-            </div>
-          ))}
-        </div>
-
-        <div className="rune-bonus-grid">
-          <div className="rune-bonus-row">
-            <div className="rune-bonus-label rune-green-text">Race Upgrade +1</div>
-            <SelectValue
-              value={settings.runeRaceUpgrade ?? 'None'}
-              options={RUNE_RACE_UPGRADE_OPTIONS}
-              onChange={(value) => updateSetting('runeRaceUpgrade', value)}
-              className="rune-green-select"
-            />
-          </div>
-
-          <div className="rune-bonus-row">
-            <div className="rune-bonus-label rune-yellow-text">+10 bonus</div>
-            <SelectValue
-              value={settings.runeBonusTen ?? 'None'}
-              options={RUNE_BONUS_TEN_OPTIONS}
-              onChange={(value) => updateSetting('runeBonusTen', value)}
-              className="rune-yellow-select"
-            />
-          </div>
-
-          <div className="rune-bonus-row">
-            <div className="rune-bonus-label rune-yellow-text">+15 bonus</div>
-            <SelectValue
-              value={settings.runeBonusFifteen ?? 'None'}
-              options={RUNE_BONUS_FIFTEEN_OPTIONS}
-              onChange={(value) => updateSetting('runeBonusFifteen', value)}
-              className="rune-yellow-select"
-            />
-          </div>
-        </div>
-
-        <div className="rune-enchant-section">
-          <div className="rune-enchant-title">Enchant</div>
-
-          {RUNE_ENCHANT_ROWS.map((row) => (
-            <div key={row.id} className="rune-enchant-row">
-              <div className="rune-enchant-label">{row.label}</div>
-
-              <div className="rune-enchant-level">
-                <SelectValue
-                  value={settings[`enchant_${row.id}`] ?? 0}
-                  options={RUNE_ENCHANT_LEVEL_OPTIONS.map((value) => ({
-                    value,
-                    label: value,
-                  }))}
-                  onChange={(value) =>
-                    updateSetting(`enchant_${row.id}`, Number(value))
-                  }
-                  className="rune-pink-select"
-                />
-              </div>
-
-              <div className="rune-enchant-value">{row.value}</div>
-            </div>
-          ))}
+        <div className="rune-bonus-row">
+          <div className="rune-bonus-label rune-yellow-text">+15 bonus</div>
+          {renderCell(
+            'runeBonusFifteen',
+            RUNE_BONUS_FIFTEEN_OPTIONS,
+            'rune-yellow-select'
+          )}
         </div>
       </div>
+
+      <div className="rune-enchant-section">
+        <div className="rune-enchant-title">Enchant</div>
+
+        {RUNE_ENCHANT_ROWS.map((row) => (
+          <div key={row.id} className="rune-enchant-row">
+            <div className="rune-enchant-label">{row.label}</div>
+
+            <div className="rune-enchant-level">
+              {renderCell(
+                `enchant_${row.id}`,
+                RUNE_ENCHANT_LEVEL_OPTIONS,
+                'rune-pink-select'
+              )}
+            </div>
+
+            <div className="rune-enchant-value">{row.value}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+export function RuneSummaryCard({ settings, updateSetting, runeData }) {
+  return (
+    <section className="card sidebar-card rune-panel-card">
+      <RunePanelFrame
+        runeData={runeData}
+        editable={false}
+        slotValue={settings.runeSlot}
+        onSlotChange={(value) => updateSetting('runeSlot', value)}
+        showSlotDropdown={true}
+      />
     </section>
+  );
+}
+
+export function RuneEditorCard({ runeData, onFieldChange }) {
+  return (
+    <article className="card rune-panel-card">
+      <RunePanelFrame
+        runeData={runeData}
+        editable={true}
+        onFieldChange={onFieldChange}
+        slotValue={runeData.slot}
+        onSlotChange={() => {}}
+        showSlotDropdown={false}
+      />
+    </article>
   );
 }
 
@@ -206,21 +279,21 @@ export function QuickStatsCard({ derivedStats }) {
   return (
     <section className="card sidebar-card">
       <h3>Quick Stats</h3>
-        <div className="mini-stat-grid">
-          <MiniStat label="AD" value="1172" />
-          <MiniStat label="SD" value="1172" />
-          <MiniStat label="AS" value="535.0" />
-          <MiniStat label="CC" value="354.5" />
-          <MiniStat label="CD" value="359.2" />
-          <MiniStat label="T(CD)" value="359.2" />
-          <MiniStat label="MC" value="42.0" />
-          <MiniStat label="Avg MC" value="42.0" />
-          <MiniStat label="-Def %" value="25.0" />
-          <MiniStat label="ES" value="23.5" />
-          <MiniStat label="FD" value="23.5" />
-          <MiniStat label="MT" value="23.5" />
-          <MiniStat label="ETC" value="23.5" />
-        </div>
+      <div className="mini-stat-grid">
+        <MiniStat label="AD" value="1172" />
+        <MiniStat label="SD" value="1172" />
+        <MiniStat label="AS" value="535.0" />
+        <MiniStat label="CC" value="354.5" />
+        <MiniStat label="CD" value="359.2" />
+        <MiniStat label="T(CD)" value="359.2" />
+        <MiniStat label="MC" value="42.0" />
+        <MiniStat label="Avg MC" value="42.0" />
+        <MiniStat label="-Def %" value="25.0" />
+        <MiniStat label="ES" value="23.5" />
+        <MiniStat label="FD" value="23.5" />
+        <MiniStat label="MT" value="23.5" />
+        <MiniStat label="ETC" value="23.5" />
+      </div>
     </section>
   );
 }

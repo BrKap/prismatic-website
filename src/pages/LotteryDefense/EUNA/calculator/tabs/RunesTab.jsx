@@ -1,28 +1,42 @@
-import React from 'react';
-import { RUNE_TYPES } from '../../constants/calculator/runeConstants';
+import React, { useState } from 'react';
+import { RuneEditorCard } from '../MainSidebarCards';
 
-export default function RunesTab() {
+export default function RunesTab({
+  runeLoadouts,
+  updateRuneLoadout,
+  swapRuneLoadouts,
+}) {
+  const [draggedSlot, setDraggedSlot] = useState(null);
+
   return (
-    <section className="card tab-panel-card">
-      <div className="section-heading-row">
+    <section className="tab-panel-card runes-tab-layout">
+      <div className="section-heading-row card">
         <div>
           <h3>Runes</h3>
-          <p>Placeholder rune editor. The main page will read from here later.</p>
+          <p>Edit all rune slots here. Drag a rune card onto another slot to swap them.</p>
         </div>
       </div>
-      <div className="placeholder-config-grid">
-        {RUNE_TYPES.map((rune) => (
-          <article className="config-card" key={rune}>
-            <h4>{rune}</h4>
-            <div className="mock-config-list">
-              <span>AD</span>
-              <span>AS</span>
-              <span>CD</span>
-              <span>CC</span>
-              <span>FD</span>
-              <span>Accel</span>
-            </div>
-          </article>
+
+      <div className="placeholder-config-grid rune-editor-grid">
+        {runeLoadouts.map((rune) => (
+          <div
+            key={rune.slot}
+            draggable
+            onDragStart={() => setDraggedSlot(rune.slot)}
+            onDragOver={(event) => event.preventDefault()}
+            onDrop={() => {
+              if (draggedSlot && draggedSlot !== rune.slot) {
+                swapRuneLoadouts(draggedSlot, rune.slot);
+              }
+              setDraggedSlot(null);
+            }}
+            onDragEnd={() => setDraggedSlot(null)}
+          >
+            <RuneEditorCard
+              runeData={rune}
+              onFieldChange={(field, value) => updateRuneLoadout(rune.slot, field, value)}
+            />
+          </div>
         ))}
       </div>
     </section>

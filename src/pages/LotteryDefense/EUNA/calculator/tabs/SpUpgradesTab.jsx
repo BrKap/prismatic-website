@@ -1,17 +1,18 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 import { UPGRADE_GROUPS } from '../../constants/calculator/spUpgradeConstants';
 import {
-  buildInitialInvestments,
   calculateUpgradeTotals,
   getNextUpgradePrice,
   getTotalUpgradePrice,
   sanitizeInvestmentValue,
 } from '../../utils/spUpgradeHelpers';
 
-export default function SpUpgradesTab() {
-  const [activeGroupId, setActiveGroupId] = useState(UPGRADE_GROUPS[0]?.id ?? '');
-  const [investments, setInvestments] = useState(buildInitialInvestments);
-
+export default function SpUpgradesTab({
+  activeGroupId,
+  setActiveGroupId,
+  investments,
+  setInvestments,
+}) {
   const activeGroup =
     UPGRADE_GROUPS.find((group) => group.id === activeGroupId) ?? UPGRADE_GROUPS[0];
 
