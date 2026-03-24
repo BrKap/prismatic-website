@@ -39,7 +39,6 @@ export const JEWEL_OPTIONS = [
   { value: 'jewel-b', label: 'Jewel B' },
 ];
 
-
 export const STAT_KEYS = {
   ATTACK_DAMAGE: 'attackDamage',
   ATTACK_SPEED: 'attackSpeed',
@@ -63,10 +62,16 @@ export const STAT_KEYS = {
   OTHER: 'other',
 };
 
+export const DERIVED_STAT_KEYS = {
+  ATTACK_DAMAGE_WITH_FD: 'attackDamageWithFD',
+  CRIT_DAMAGE_WITH_TORMENT: 'critDamageWithTorment',
+  AVERAGE_MULTI_CRIT: 'averageMultiCrit',
+};
+
 export const CURRENCY = {
   EP: 'EP',
   SP: 'SP',
-}
+};
 
 export const PROFILE = {
   XP: 'XP',
@@ -84,4 +89,3 @@ export const TAB_OPTIONS = [
   { id: 'build-units', label: 'Build Units' },
   { id: 'presets', label: 'Presets' },
 ];
-

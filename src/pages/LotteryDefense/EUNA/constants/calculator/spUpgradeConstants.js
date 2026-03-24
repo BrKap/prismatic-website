@@ -521,7 +521,7 @@ export const UPGRADE_GROUPS = [
         name: 'Accel', 
         statKey: STAT_KEYS.ACCELERATION,
         maxInvestments: 150,
-        valueModel: createLinearValueModel({ base: 0, perLevel:  1}), /* Have to check implementation later */
+        valueModel: createLinearValueModel({ base: 0, perLevel: 0 }),
         costModel: createLinearCostModel({ base: 1300, perLevel: 750 }),
       }),
     ],
@@ -549,7 +549,7 @@ export const UPGRADE_GROUPS = [
       createUpgrade({ 
         name: 'MT Multi Crit', 
         statKey: STAT_KEYS.MULTI_TARGET_MULTI_CRIT,
-        maxInvestments: 290,
+        maxInvestments: 200,
         valueModel: createLinearValueModel({ base: 0, perLevel: 1 }),
         costModel: createLinearCostModel({ base: 1200, perLevel: 600 }), 
       }),

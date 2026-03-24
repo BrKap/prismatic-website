@@ -51,7 +51,7 @@ export function getUpgradeValue(upgrade, investedCount) {
     return 0;
   }
 
-  return getValueForLevelFromModel(upgrade.valueModel, clampedLevel - 1);
+  return getValueForLevelFromModel(upgrade.valueModel, clampedLevel);
 }
 
 export function getUpgradeCostForLevel(upgrade, level) {

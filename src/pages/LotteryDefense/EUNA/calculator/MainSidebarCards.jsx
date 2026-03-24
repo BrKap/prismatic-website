@@ -77,6 +77,7 @@ function RunePanelFrame({
   slotValue,
   onSlotChange,
   showSlotDropdown = true,
+  variant = 'editor',
 }) {
   const normalizedRune = normalizeRuneData(runeData);
   const runeType = (normalizedRune.runeType || 'cosmos').toLowerCase();
@@ -100,7 +101,7 @@ function RunePanelFrame({
   };
 
   return (
-    <div className="rune-panel-frame">
+    <div className={`rune-panel-frame rune-panel-frame--${variant}`}>
       <div className="rune-panel-top">
         <div className="rune-slot-box">
           <span className="rune-slot-label">Slot</span>
@@ -132,7 +133,7 @@ function RunePanelFrame({
 
       <div className="rune-meta-grid">
         <div className="rune-meta-cell">
-          <span>Rune Type</span>
+          <span className="rune-meta-label">Rune Type</span>
           {editable ? (
             <SelectValue
               value={runeType}
@@ -146,7 +147,7 @@ function RunePanelFrame({
         </div>
 
         <div className="rune-meta-cell">
-          <span>Rune Lvl</span>
+          <span className="rune-meta-label">Rune Lvl</span>
           {renderCell(
             'runeLevel',
             RUNE_LEVEL_OPTIONS,
@@ -155,7 +156,7 @@ function RunePanelFrame({
         </div>
 
         <div className="rune-meta-cell">
-          <span>Awakening</span>
+          <span className="rune-meta-label">Awakening</span>
           {renderCell(
             'runeAwakening',
             RUNE_AWAKENING_OPTIONS,
@@ -252,13 +253,14 @@ function RunePanelFrame({
 
 export function RuneSummaryCard({ settings, updateSetting, runeData }) {
   return (
-    <section className="card sidebar-card rune-panel-card">
+    <section className="card sidebar-card rune-panel-card rune-panel-card--summary">
       <RunePanelFrame
         runeData={runeData}
         editable={false}
         slotValue={settings.runeSlot}
         onSlotChange={(value) => updateSetting('runeSlot', value)}
         showSlotDropdown={true}
+        variant="summary"
       />
     </section>
   );
@@ -266,7 +268,7 @@ export function RuneSummaryCard({ settings, updateSetting, runeData }) {
 
 export function RuneEditorCard({ runeData, onFieldChange, slotDisplayValue }) {
   return (
-    <article className="card rune-panel-card">
+    <article className="card rune-panel-card rune-panel-card--editor">
       <RunePanelFrame
         runeData={runeData}
         editable={true}
@@ -274,6 +276,7 @@ export function RuneEditorCard({ runeData, onFieldChange, slotDisplayValue }) {
         slotValue={slotDisplayValue ?? runeData.slot}
         onSlotChange={() => {}}
         showSlotDropdown={false}
+        variant="editor"
       />
     </article>
   );

@@ -13,6 +13,8 @@ import {
 } from "./utils/damageCalculation";
 import { createUnitEntry } from './utils/createUnitEntry';
 import { buildInitialInvestments } from './utils/spUpgradeHelpers';
+import { calculateProfileStats } from './utils/statCalculator';
+import FloatingStatsPanel from './calculator/FloatingStatsPanel';
 import CalculatorHero from './calculator/CalculatorHero';
 import CalculatorTabs from './calculator/CalculatorTabs';
 import MainTab from './calculator/MainTab';
@@ -221,6 +223,33 @@ export default function LotteryDefenseCalculatorPage() {
     });
   };
 
+  const profileSummary = useMemo(() => {
+    return calculateProfileStats({
+      runeLoadouts,
+      spInvestments,
+      difficultyState: {
+        difficulty: calculatorSettings.difficulty,
+        title: calculatorSettings.title,
+      },
+      tormentState: {
+        level: calculatorSettings.torment,
+        critDamageReduction: 0,
+      },
+      buffState: null,
+    });
+  }, [
+    runeLoadouts,
+    spInvestments,
+    calculatorSettings.difficulty,
+    calculatorSettings.title,
+    calculatorSettings.torment,
+  ]);
+
+  const profileStats = {
+    ...profileSummary.rawStats,
+    ...profileSummary.displayStats,
+  };
+
   return (
     <section className="calculator-page">
       <CalculatorHero settings={calculatorSettings} />
@@ -277,6 +306,8 @@ export default function LotteryDefenseCalculatorPage() {
           updateUnit={updateUnit}
         />
       )}
+
+      <FloatingStatsPanel profileStats={profileStats} />
     </section>
   );
 }
