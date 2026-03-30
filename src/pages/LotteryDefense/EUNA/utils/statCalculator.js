@@ -1,4 +1,8 @@
 import { DERIVED_STAT_KEYS, STAT_KEYS } from '../constants/calculator/mainConstants';
+import {
+  RUNE_ENCHANT_VALUE_TABLE,
+  RUNE_LAYOUTS,
+} from '../constants/calculator/runeConstants';
 import { UPGRADE_GROUP_MAP } from '../constants/calculator/spUpgradeConstants';
 import { getUpgradeValue } from './spUpgradeHelpers';
 
@@ -27,6 +31,13 @@ export function createEmptyProfileStats() {
     [STAT_KEYS.COOLDOWN]: 0,
     [STAT_KEYS.SP_PERCENT]: 0,
     [STAT_KEYS.SP_BANK]: 0,
+    [STAT_KEYS.RACE_UPGRADE_T_BIO]: 0,
+    [STAT_KEYS.RACE_UPGRADE_T_MECH]: 0,
+    [STAT_KEYS.RACE_UPGRADE_P_BIO]: 0,
+    [STAT_KEYS.RACE_UPGRADE_P_MECH]: 0,
+    [STAT_KEYS.RACE_UPGRADE_ZERG]: 0,
+    [STAT_KEYS.RACE_UPGRADE_NEUTRAL]: 0,
+    [STAT_KEYS.RACE_UPGRADE_CAP_BONUS]: 0,
     [STAT_KEYS.OTHER]: 0,
   };
 }
@@ -118,21 +129,308 @@ function createBreakdownEntry({
   };
 }
 
+function getRuneYellowBonusAmount(statKey, runeLevel) {
+  const level = toNumber(runeLevel);
+
+  if (
+    statKey === STAT_KEYS.ATTACK_DAMAGE ||
+    statKey === STAT_KEYS.ATTACK_SPEED ||
+    statKey === STAT_KEYS.CRIT_CHANCE
+  ) {
+    return Math.min(level, 15);
+  }
+
+  if (statKey === STAT_KEYS.SP_PERCENT) {
+    return level >= 9 ? 5 : 0;
+  }
+
+  return 0;
+}
+
+function getRuneBonusStats(optionValue, rune = null) {
+  switch (optionValue) {
+    case '50% Crit Dmg':
+      return { [STAT_KEYS.CRIT_DAMAGE]: 50 };
+
+    case '15% Accel':
+      return { [STAT_KEYS.ACCELERATION]: 15 };
+
+    case '3 MC':
+      return { [STAT_KEYS.MULTI_CRIT]: 3 };
+
+    case '2x BaseCC':
+      return {
+        [STAT_KEYS.CRIT_CHANCE]: toNumber(rune?.critChanceBase),
+      };
+
+    case 'Max Grade +5':
+      return {};
+
+    case '-25% Armor':
+      return { [STAT_KEYS.ARMOR_REDUCTION]: 25 };
+
+    case 'Every Race +1':
+      return {
+        [STAT_KEYS.RACE_UPGRADE_T_BIO]: 1,
+        [STAT_KEYS.RACE_UPGRADE_T_MECH]: 1,
+        [STAT_KEYS.RACE_UPGRADE_P_BIO]: 1,
+        [STAT_KEYS.RACE_UPGRADE_P_MECH]: 1,
+        [STAT_KEYS.RACE_UPGRADE_ZERG]: 1,
+        [STAT_KEYS.RACE_UPGRADE_NEUTRAL]: 1,
+        [STAT_KEYS.RACE_UPGRADE_CAP_BONUS]: 1,
+      };
+
+    case '15 AD on equip':
+      return { [STAT_KEYS.ATTACK_DAMAGE]: 15 };
+
+    case '-SS & Refund':
+      return {};
+
+    case '2x Final dmg':
+      return {
+        [STAT_KEYS.FINAL_DAMAGE]: toNumber(rune?.finalDamageBase),
+      };
+
+    default:
+      return {};
+  }
+}
+
+function applyRuneStat(result, statKey, value) {
+  const numericValue = toNumber(value);
+
+  if (!statKey || numericValue === 0) {
+    return 'additive';
+  }
+
+  if (statKey === STAT_KEYS.ACCELERATION) {
+    result.accelerationMultiplier *= 1 + numericValue / 100;
+    return 'multiplicative';
+  }
+
+  addStat(result, statKey, numericValue);
+  return 'additive';
+}
+
+function getRuneRaceStatKey(raceValue) {
+  switch (raceValue) {
+    case 'T Bio':
+      return STAT_KEYS.RACE_UPGRADE_T_BIO;
+    case 'T Mech':
+      return STAT_KEYS.RACE_UPGRADE_T_MECH;
+    case 'P Bio':
+      return STAT_KEYS.RACE_UPGRADE_P_BIO;
+    case 'P Mech':
+      return STAT_KEYS.RACE_UPGRADE_P_MECH;
+    case 'Zerg':
+      return STAT_KEYS.RACE_UPGRADE_ZERG;
+    case 'Neutral':
+      return STAT_KEYS.RACE_UPGRADE_NEUTRAL;
+    default:
+      return null;
+  }
+}
+
+function getRuneAwakeningStats(rune) {
+  const awakening = rune?.runeAwakening ?? 'None';
+  const stats = {};
+
+  const add = (statKey, value) => {
+    if (!statKey || !toNumber(value)) {
+      return;
+    }
+
+    stats[statKey] = toNumber(stats[statKey]) + toNumber(value);
+  };
+
+  if (['A', 'B', 'C', 'D', 'E'].includes(awakening)) {
+    add(STAT_KEYS.ATTACK_DAMAGE, toNumber(rune.attackDamageBase));
+  }
+
+  if (['B', 'C', 'D', 'E'].includes(awakening)) {
+    add(STAT_KEYS.ATTACK_SPEED, toNumber(rune.attackSpeedBase));
+  }
+
+  if (['D', 'E'].includes(awakening)) {
+    add(STAT_KEYS.CRIT_DAMAGE, 30);
+  }
+
+  if (awakening === 'E') {
+    add(STAT_KEYS.ARMOR_REDUCTION, 10);
+  }
+
+  return stats;
+}
+
+function getRuneEnchantStats(rune) {
+  const attackDamageLevel = toNumber(rune?.enchantAttackDamage);
+  const attackSpeedLevel = toNumber(rune?.enchantAttackSpeed);
+  const accelerationLevel = toNumber(rune?.enchantAcceleration);
+  const totalDamageLevel = toNumber(rune?.enchantTotalDamage);
+  const shieldReductionLevel = toNumber(rune?.enchantShieldReduction);
+  const healthReductionLevel = toNumber(rune?.enchantHealthReduction);
+
+  const attackDamageValues = RUNE_ENCHANT_VALUE_TABLE[attackDamageLevel] ?? RUNE_ENCHANT_VALUE_TABLE[0];
+  const attackSpeedValues = RUNE_ENCHANT_VALUE_TABLE[attackSpeedLevel] ?? RUNE_ENCHANT_VALUE_TABLE[0];
+  const accelerationValues = RUNE_ENCHANT_VALUE_TABLE[accelerationLevel] ?? RUNE_ENCHANT_VALUE_TABLE[0];
+  const totalDamageValues = RUNE_ENCHANT_VALUE_TABLE[totalDamageLevel] ?? RUNE_ENCHANT_VALUE_TABLE[0];
+  const shieldReductionValues = RUNE_ENCHANT_VALUE_TABLE[shieldReductionLevel] ?? RUNE_ENCHANT_VALUE_TABLE[0];
+  const healthReductionValues = RUNE_ENCHANT_VALUE_TABLE[healthReductionLevel] ?? RUNE_ENCHANT_VALUE_TABLE[0];
+
+  return {
+    [STAT_KEYS.ATTACK_DAMAGE]: attackDamageValues.attackDamage,
+    [STAT_KEYS.CRIT_CHANCE]: attackSpeedValues.critChance,
+    [STAT_KEYS.ACCELERATION]: accelerationValues.acceleration,
+    [STAT_KEYS.FINAL_DAMAGE]: totalDamageValues.finalDamage,
+    [STAT_KEYS.SHIELD_REDUCTION]: shieldReductionValues.shieldReduction,
+    [STAT_KEYS.HEALTH_REDUCTION]: healthReductionValues.healthReduction,
+  };
+}
+
 export function calculateRuneSourceStats(runeLoadouts = []) {
   const result = createEmptySourceResult();
 
   runeLoadouts.forEach((rune, index) => {
-    if (!rune?.runeType) {
+    const runeType = String(rune?.runeType ?? '').toLowerCase();
+    const runeLayout = RUNE_LAYOUTS[runeType];
+
+    if (!runeType || !runeLayout) {
       return;
     }
+
+    const runeEntryId = rune.id ?? `rune-${index}`;
 
     result.breakdown.push(
       createBreakdownEntry({
         source: 'runes',
-        entryId: rune.id ?? `rune-${index}`,
-        entryName: rune.runeType,
+        entryId: runeEntryId,
+        entryName: `${runeType} (${rune.slot ?? `slot-${index + 1}`})`,
+        rawValue: {
+          runeLevel: rune.runeLevel,
+          runeAwakening: rune.runeAwakening,
+        },
       })
     );
+
+    runeLayout.primaryRows.forEach((row) => {
+      const baseValue = toNumber(rune[row.baseField]);
+      const yellowValue = row.hasLevelYellowBonus
+        ? getRuneYellowBonusAmount(row.statKey, rune.runeLevel)
+        : 0;
+      const pinkValue = row.pinkEnabled && row.bonusField
+        ? toNumber(rune[row.bonusField])
+        : 0;
+
+      const totalValue = baseValue + yellowValue + pinkValue;
+
+      if (totalValue === 0) {
+        return;
+      }
+
+      const combineMode = applyRuneStat(result, row.statKey, totalValue);
+
+      result.breakdown.push(
+        createBreakdownEntry({
+          source: 'runes',
+          entryId: runeEntryId,
+          entryName: `${runeType} ${row.label}`,
+          statKey: row.statKey,
+          rawValue: {
+            base: baseValue,
+            yellow: yellowValue,
+            pink: pinkValue,
+          },
+          appliedValue: totalValue,
+          combineMode,
+        })
+      );
+    });
+
+    const awakeningStats = getRuneAwakeningStats(rune);
+
+    Object.entries(awakeningStats).forEach(([statKey, statValue]) => {
+      const combineMode = applyRuneStat(result, statKey, statValue);
+
+      result.breakdown.push(
+        createBreakdownEntry({
+          source: 'runes',
+          entryId: runeEntryId,
+          entryName: `${runeType} awakening ${rune.runeAwakening}`,
+          statKey,
+          rawValue: rune.runeAwakening,
+          appliedValue: statValue,
+          combineMode,
+        })
+      );
+    });
+
+    [rune.runeBonusTen, rune.runeBonusFifteen].forEach((bonusValue, bonusIndex) => {
+      const bonusStats = getRuneBonusStats(bonusValue, rune);
+      
+
+      Object.entries(bonusStats).forEach(([statKey, statValue]) => {
+        const combineMode = applyRuneStat(result, statKey, statValue);
+
+        result.breakdown.push(
+          createBreakdownEntry({
+            source: 'runes',
+            entryId: runeEntryId,
+            entryName: `${runeType} ${bonusIndex === 0 ? '+10' : '+15'} bonus`,
+            statKey,
+            rawValue: bonusValue,
+            appliedValue: statValue,
+            combineMode,
+          })
+        );
+      });
+    });
+
+    const enchantStats = getRuneEnchantStats(rune);
+
+    Object.entries(enchantStats).forEach(([statKey, statValue]) => {
+      if (!toNumber(statValue)) {
+        return;
+      }
+
+      const combineMode = applyRuneStat(result, statKey, statValue);
+
+      result.breakdown.push(
+        createBreakdownEntry({
+          source: 'runes',
+          entryId: runeEntryId,
+          entryName: `${runeType} enchant`,
+          statKey,
+          rawValue: {
+            enchantAttackDamage: rune.enchantAttackDamage,
+            enchantAttackSpeed: rune.enchantAttackSpeed,
+            enchantAcceleration: rune.enchantAcceleration,
+            enchantTotalDamage: rune.enchantTotalDamage,
+            enchantShieldReduction: rune.enchantShieldReduction,
+            enchantHealthReduction: rune.enchantHealthReduction,
+          },
+          appliedValue: statValue,
+          combineMode,
+        })
+      );
+    });
+
+    const raceStatKey = getRuneRaceStatKey(rune.runeRaceUpgrade);
+
+    if (raceStatKey) {
+      addStat(result, raceStatKey, 1);
+
+      result.breakdown.push(
+        createBreakdownEntry({
+          source: 'runes',
+          entryId: runeEntryId,
+          entryName: `${runeType} race upgrade`,
+          statKey: raceStatKey,
+          rawValue: rune.runeRaceUpgrade,
+          appliedValue: 1,
+          combineMode: 'additive',
+        })
+      );
+    }
   });
 
   return finalizeSourceResult(result);

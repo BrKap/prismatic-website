@@ -58,7 +58,16 @@
   width: 120px;
 }
 
+
+.build-units-table .col-additional-damage {
+  width: 120px;
+}
+
 .build-units-table .col-speed {
+  width: 110px;
+}
+
+.build-units-table .col-speed_reduction {
   width: 110px;
 }
 

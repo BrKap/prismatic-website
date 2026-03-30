@@ -63,7 +63,9 @@ export default function BuildUnitsTab({
               <th className="col-lb">LB</th>
               <th className="col-jewel">Jewel</th>
               <th className="col-damage">Damage</th>
-              <th className="col-speed">Atk Spd</th>
+              <th className="col-additional-damage">+ Damage</th>
+              <th className="col-speed">Base Weapon Speed</th>
+              <th className="col-speed_reduction">- Speed</th>
               <th className="col-hits">Hits</th>
               <th className="col-dps">DPS / Unit</th>
               <th className="col-full-dps">Full DPS</th>

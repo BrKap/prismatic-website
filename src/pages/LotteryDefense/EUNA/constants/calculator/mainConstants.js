@@ -59,6 +59,13 @@ export const STAT_KEYS = {
   COOLDOWN: 'cooldown',
   SP_PERCENT: 'spPercent',
   SP_BANK: 'spBank',
+  RACE_UPGRADE_T_BIO: 'raceUpgradeTBio',
+  RACE_UPGRADE_T_MECH: 'raceUpgradeTMech',
+  RACE_UPGRADE_P_BIO: 'raceUpgradePBio',
+  RACE_UPGRADE_P_MECH: 'raceUpgradePMech',
+  RACE_UPGRADE_ZERG: 'raceUpgradeZerg',
+  RACE_UPGRADE_NEUTRAL: 'raceUpgradeNeutral',
+  RACE_UPGRADE_CAP_BONUS: 'raceUpgradeCapBonus',
   OTHER: 'other',
 };
 

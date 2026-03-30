@@ -7,7 +7,6 @@ import { StatTile } from '../../../../components/common/Stats';
 import {
   BuffPreviewCard,
   CreepStatsCard,
-  QuickStatsCard,
   RuneSummaryCard,
   UnitRecipeCostCard,
 } from './MainSidebarCards';
@@ -61,7 +60,6 @@ export default function MainTab({
           updateSetting={updateSetting}
           runeData={activeRune}
         />
-        <QuickStatsCard derivedStats={derivedStats} />
         <BuffPreviewCard />
       </aside>
 

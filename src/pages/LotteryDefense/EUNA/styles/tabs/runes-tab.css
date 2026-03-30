@@ -311,11 +311,9 @@
 }
 
 .rune-panel-card--summary .rune-meta-cell {
-  display: grid;
-  grid-template-columns: 88px minmax(0, 1fr);
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.55rem 0.7rem;
+  grid-template-columns: 110px minmax(0, 1fr);
+  gap: 0.65rem;
+  padding: 0.65rem 0.8rem;
 }
 
 .rune-panel-card--summary .rune-meta-label {
@@ -329,24 +327,94 @@
 }
 
 .rune-panel-card--summary {
-  padding: 0.55rem;
+  padding: 0.75rem;
 }
 
 .rune-panel-card--summary .rune-icon-image,
 .rune-panel-card--summary .rune-icon-fallback {
-  width: 72px;
-  height: 72px;
+  width: 88px;
+  height: 88px;
 }
 
 .rune-panel-card--summary .rune-icon-shell {
-  min-height: 84px;
-  padding: 0.35rem;
+  min-height: 100px;
+  padding: 0.45rem;
 }
 
 .rune-panel-card--summary .rune-slot-box {
-  padding: 0.6rem 0.45rem;
+  padding: 0.75rem 0.55rem;
 }
 
 .rune-panel-card--summary .rune-panel-top {
-  grid-template-columns: 60px minmax(0, 1fr);
+  grid-template-columns: 82px minmax(0, 1fr);
+}
+
+.rune-panel-card--summary .rune-stat-row {
+  grid-template-columns: minmax(0, 1.7fr) 72px 72px 56px;
+}
+
+.rune-panel-card--summary .rune-stat-label,
+.rune-panel-card--summary .rune-bonus-label,
+.rune-panel-card--summary .rune-enchant-label {
+  padding: 0.5rem 0.8rem;
+  line-height: 1.1;
+}
+
+.rune-panel-card--summary .rune-stat-col,
+.rune-panel-card--summary .rune-enchant-level,
+.rune-panel-card--summary .rune-enchant-value {
+  padding: 0.15rem 0.25rem;
+}
+
+.rune-panel-card--summary .rune-bonus-row {
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+}
+
+.rune-panel-card--summary .rune-enchant-row {
+  grid-template-columns: minmax(0, 1.5fr) 60px 60px;
+}
+
+.rune-panel-card--summary .rune-white-display,
+.rune-panel-card--summary .rune-cyan-display,
+.rune-panel-card--summary .rune-green-display,
+.rune-panel-card--summary .rune-yellow-display,
+.rune-panel-card--summary .rune-pink-display {
+  padding: 0.2rem 0.35rem;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  cursor: default;
+  background-image: none;
+}
+
+.rune-panel-card--summary .rune-white-display {
+  color: #ffffff;
+}
+
+.rune-panel-card--summary .rune-cyan-display {
+  color: #7ef6ff;
+}
+
+.rune-panel-card--summary .rune-green-display {
+  color: #75f15d;
+}
+
+.rune-panel-card--summary .rune-yellow-display {
+  color: #f8f156;
+}
+
+.rune-panel-card--summary .rune-pink-display {
+  color: #ff4fd8;
+}
+
+.rune-display-value {
+  width: 100%;
+  min-width: 0;
+  text-align: center;
+  font-weight: 700;
+  line-height: 1.15;
 }

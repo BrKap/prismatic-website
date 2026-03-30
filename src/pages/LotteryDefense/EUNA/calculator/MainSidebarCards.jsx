@@ -16,6 +16,7 @@ import {
   getRuneBaseOptions,
   getRunePinkOptions,
   getRuneYellowValue,
+  getRuneEnchantDisplayValue,
 } from '../constants/calculator/runeConstants';
 
 function SelectValue({
@@ -50,7 +51,11 @@ function DisplayValue({ value, className = '', placeholder = '-' }) {
     ? placeholder
     : value;
 
-  return <div className={`rune-display-value ${className}`.trim()}>{displayValue}</div>;
+  return (
+    <div className={`rune-display-value ${className}`.trim()}>
+      {displayValue}
+    </div>
+  );
 }
 
 function getRuneLayout(runeType) {
@@ -84,20 +89,32 @@ function RunePanelFrame({
   const runeLayout = getRuneLayout(runeType);
   const runeIcon = getRuneIcon(runeType);
 
-  const renderCell = (field, options, className = '', fallback = '-') => {
+  const renderCell = (
+    field,
+    options,
+    editableClassName = '',
+    displayClassName = '',
+    fallback = '-'
+  ) => {
     if (editable) {
       return (
         <SelectValue
           value={normalizedRune[field]}
           options={options}
           onChange={(value) => onFieldChange(field, value)}
-          className={className}
+          className={editableClassName}
         />
       );
     }
 
     const value = normalizedRune[field];
-    return <DisplayValue value={value} className={className} placeholder={fallback} />;
+    return (
+      <DisplayValue
+        value={value}
+        className={displayClassName}
+        placeholder={fallback}
+      />
+    );
   };
 
   return (
@@ -142,7 +159,7 @@ function RunePanelFrame({
               className="rune-white-select"
             />
           ) : (
-            <DisplayValue value={runeType} className="rune-white-select" />
+            <DisplayValue value={runeType} className="rune-white-display" />
           )}
         </div>
 
@@ -151,7 +168,8 @@ function RunePanelFrame({
           {renderCell(
             'runeLevel',
             RUNE_LEVEL_OPTIONS,
-            'rune-white-select'
+            'rune-white-select',
+            'rune-white-display'
           )}
         </div>
 
@@ -160,7 +178,8 @@ function RunePanelFrame({
           {renderCell(
             'runeAwakening',
             RUNE_AWAKENING_OPTIONS,
-            'rune-cyan-select'
+            'rune-cyan-select',
+            'rune-cyan-display'
           )}
         </div>
       </div>
@@ -174,7 +193,8 @@ function RunePanelFrame({
               {renderCell(
                 row.baseField,
                 getRuneBaseOptions(row.statKey),
-                'rune-white-select'
+                'rune-white-select',
+                'rune-white-display'
               )}
             </div>
 
@@ -189,7 +209,8 @@ function RunePanelFrame({
                 renderCell(
                   row.bonusField,
                   getRunePinkOptions(row.statKey),
-                  'rune-pink-select'
+                  'rune-pink-select',
+                  'rune-pink-display'
                 )
               ) : (
                 <span className="rune-empty-cell">-</span>
@@ -205,7 +226,8 @@ function RunePanelFrame({
           {renderCell(
             'runeRaceUpgrade',
             RUNE_RACE_UPGRADE_OPTIONS,
-            'rune-green-select'
+            'rune-green-select',
+            'rune-green-display'
           )}
         </div>
 
@@ -214,7 +236,8 @@ function RunePanelFrame({
           {renderCell(
             'runeBonusTen',
             RUNE_BONUS_TEN_OPTIONS,
-            'rune-yellow-select'
+            'rune-yellow-select',
+            'rune-yellow-display'
           )}
         </div>
 
@@ -223,7 +246,8 @@ function RunePanelFrame({
           {renderCell(
             'runeBonusFifteen',
             RUNE_BONUS_FIFTEEN_OPTIONS,
-            'rune-yellow-select'
+            'rune-yellow-select',
+            'rune-yellow-display'
           )}
         </div>
       </div>
@@ -239,11 +263,14 @@ function RunePanelFrame({
               {renderCell(
                 row.field,
                 RUNE_ENCHANT_LEVEL_OPTIONS,
-                'rune-pink-select'
+                'rune-pink-select',
+                'rune-pink-display'
               )}
             </div>
 
-            <div className="rune-enchant-value">{row.value}</div>
+            <div className="rune-enchant-value">
+              {getRuneEnchantDisplayValue(row.valueKey, normalizedRune[row.field])}
+            </div>
           </div>
         ))}
       </div>
@@ -282,29 +309,6 @@ export function RuneEditorCard({ runeData, onFieldChange, slotDisplayValue }) {
   );
 }
 
-export function QuickStatsCard({ derivedStats }) {
-  return (
-    <section className="card sidebar-card">
-      <h3>Quick Stats</h3>
-      <div className="mini-stat-grid">
-        <MiniStat label="AD" value="1172" />
-        <MiniStat label="SD" value="1172" />
-        <MiniStat label="AS" value="535.0" />
-        <MiniStat label="CC" value="354.5" />
-        <MiniStat label="CD" value="359.2" />
-        <MiniStat label="T(CD)" value="359.2" />
-        <MiniStat label="MC" value="42.0" />
-        <MiniStat label="Avg MC" value="42.0" />
-        <MiniStat label="-Def %" value="25.0" />
-        <MiniStat label="ES" value="23.5" />
-        <MiniStat label="FD" value="23.5" />
-        <MiniStat label="MT" value="23.5" />
-        <MiniStat label="ETC" value="23.5" />
-      </div>
-    </section>
-  );
-}
-
 export function BuffPreviewCard() {
   return (
     <section className="card sidebar-card">
@@ -333,31 +337,14 @@ export function BuildMetaCard({ units }) {
   );
 }
 
-export function MainTabNotesCard() {
-  return (
-    <section className="card sidebar-card">
-      <h3>Main Tab Notes</h3>
-      <ul className="notes-list">
-        <li>Main tab is focused on settings, unit list, and DPS overview.</li>
-        <li>Runes on the left are summary-only here.</li>
-        <li>SP Upgrades, Runes, Jewels, and Buffs are separated into their own tabs.</li>
-        <li>The unit table is built to stay dynamic and scrollable.</li>
-      </ul>
-    </section>
-  );
-}
-
 export function CreepStatsCard() {
   return (
     <section className="card sidebar-card">
       <h3>Enemy Creep Stats</h3>
       <div className="sidebar-list-grid creep-stats-grid">
         <InfoRow label="Shield / HP" value="50000" />
-        <InfoRow label="HP Regen" value="0" />
-        <InfoRow label="Shield Regen" value="0" />
         <InfoRow label="Armor" value="216" />
         <InfoRow label="Shield Armor" value="88" />
-        <InfoRow label="Move Speed" value="0" />
       </div>
     </section>
   );

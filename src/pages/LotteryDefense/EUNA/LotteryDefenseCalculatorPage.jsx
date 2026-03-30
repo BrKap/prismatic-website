@@ -225,7 +225,7 @@ export default function LotteryDefenseCalculatorPage() {
 
   const profileSummary = useMemo(() => {
     return calculateProfileStats({
-      runeLoadouts,
+      runeLoadouts: activeRune ? [activeRune] : [],
       spInvestments,
       difficultyState: {
         difficulty: calculatorSettings.difficulty,
@@ -238,7 +238,7 @@ export default function LotteryDefenseCalculatorPage() {
       buffState: null,
     });
   }, [
-    runeLoadouts,
+    activeRune,
     spInvestments,
     calculatorSettings.difficulty,
     calculatorSettings.title,

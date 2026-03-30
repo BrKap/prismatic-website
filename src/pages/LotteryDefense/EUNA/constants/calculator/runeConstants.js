@@ -36,9 +36,9 @@ export const RUNE_AWAKENING_OPTIONS = [
   { value: 'E', label: 'E' },
 ];
 
-export const RUNE_LEVEL_OPTIONS = Array.from({ length: 15 }, (_, index) => ({
-  value: String(index + 1),
-  label: String(index + 1),
+export const RUNE_LEVEL_OPTIONS = Array.from({ length: 156}, (_, index) => ({
+  value: String(index),
+  label: String(index),
 }));
 
 export const RUNE_ENCHANT_LEVEL_OPTIONS = Array.from(
@@ -59,18 +59,29 @@ export const RUNE_RACE_UPGRADE_OPTIONS = [
 
 export const RUNE_BONUS_TEN_OPTIONS = [
   { value: 'None', label: 'None' },
+  { value: 'Every Race +1', label: 'Every Race +1' },
   { value: '50% Crit Dmg', label: '50% Crit Dmg' },
   { value: '15% Accel', label: '15% Accel' },
-  { value: '15% Skill Dmg', label: '15% Skill Dmg' },
-  { value: '10% Final Dmg', label: '10% Final Dmg' },
+  { value: '2x BaseCC', label: '2x BaseCC' },
+  { value: '-25% Armor', label: '-25% Armor' },
+  { value: '3 MC', label: '3 MC' },
+  { value: 'Max Grade +5', label: 'Max Grade +5' },
+  { value: '50% debuff remove', label: '50% Debuff Removal' },
+  { value: '15 AD on equip', label: '15 AD on equip' },
+  { value: '-SS & Refund', label: '-SS & Refund' },
+  { value: '2x Final dmg', label: '2x Final dmg' },
 ];
 
 export const RUNE_BONUS_FIFTEEN_OPTIONS = [
   { value: 'None', label: 'None' },
-  { value: '15% Accel', label: '15% Accel' },
+  { value: 'Every Race +1', label: 'Every Race +1' },
   { value: '50% Crit Dmg', label: '50% Crit Dmg' },
-  { value: '15% Skill Dmg', label: '15% Skill Dmg' },
-  { value: '10% Final Dmg', label: '10% Final Dmg' },
+  { value: '15% Accel', label: '15% Accel' },
+  { value: '2x BaseCC', label: '2x BaseCC' },
+  { value: '-25% Armor', label: '-25% Armor' },
+  { value: '3 MC', label: '3 MC' },
+  { value: 'Max Grade +5', label: 'Max Grade +5' },
+  { value: '50% debuff remove', label: '50% Debuff Removal' },
 ];
 
 function makeOptions(values) {
@@ -381,13 +392,21 @@ export const RUNE_LAYOUTS = {
 };
 
 export const RUNE_ENCHANT_ROWS = [
-  { id: 'attackDamage', label: 'Attack Damage', field: 'enchantAttackDamage', value: '+0' },
-  { id: 'attackSpeed', label: 'Attack Speed', field: 'enchantAttackSpeed', value: '+0' },
-  { id: 'acceleration', label: 'Acceleration', field: 'enchantAcceleration', value: '+0' },
-  { id: 'totalDamage', label: 'Total Damage', field: 'enchantTotalDamage', value: '+0' },
-  { id: 'shieldReduction', label: 'Shield Reduction', field: 'enchantShieldReduction', value: '+0' },
-  { id: 'healthReduction', label: 'HP Reduction', field: 'enchantHealthReduction', value: '+0' },
+  { id: 'attackDamage', label: 'Attack Damage', field: 'enchantAttackDamage', valueKey: 'attackDamage' },
+  { id: 'critChance', label: 'Critical Chance', field: 'enchantAttackSpeed', valueKey: 'critChance' },
+  { id: 'acceleration', label: 'Acceleration', field: 'enchantAcceleration', valueKey: 'acceleration' },
+  { id: 'totalDamage', label: 'Total Damage', field: 'enchantTotalDamage', valueKey: 'finalDamage' },
+  { id: 'shieldReduction', label: 'Shield Reduction', field: 'enchantShieldReduction', valueKey: 'shieldReduction' },
+  { id: 'healthReduction', label: 'HP Reduction', field: 'enchantHealthReduction', valueKey: 'healthReduction' },
 ];
+
+export function getRuneEnchantDisplayValue(valueKey, enchantLevel) {
+  const level = Number(enchantLevel) || 0;
+  const row = RUNE_ENCHANT_VALUE_TABLE[level] ?? RUNE_ENCHANT_VALUE_TABLE[0];
+  const value = Number(row?.[valueKey] ?? 0);
+
+  return value > 0 ? `+${value}` : '+0';
+}
 
 export function getRuneBaseOptions(statKey) {
   return RUNE_BASE_OPTIONS_BY_STAT[statKey] ?? makeOptions([0]);
@@ -453,6 +472,19 @@ export function createEmptyRuneData(slotValue) {
     enchantHealthReduction: '0',
   };
 }
+
+export const RUNE_ENCHANT_VALUE_TABLE = {
+  0: { attackDamage: 0, critChance: 0, acceleration: 0, finalDamage: 0, shieldReduction: 0, healthReduction: 0 },
+  1: { attackDamage: 4, critChance: 2, acceleration: 1, finalDamage: 1, shieldReduction: 1, healthReduction: 1 },
+  2: { attackDamage: 8, critChance: 4, acceleration: 2, finalDamage: 2, shieldReduction: 2, healthReduction: 2 },
+  3: { attackDamage: 16, critChance: 7, acceleration: 4, finalDamage: 3, shieldReduction: 4, healthReduction: 4 },
+  4: { attackDamage: 24, critChance: 10, acceleration: 6, finalDamage: 4, shieldReduction: 6, healthReduction: 6 },
+  5: { attackDamage: 40, critChance: 15, acceleration: 10, finalDamage: 5, shieldReduction: 10, healthReduction: 10 },
+  6: { attackDamage: 50, critChance: 18, acceleration: 12, finalDamage: 6, shieldReduction: 12, healthReduction: 12 },
+  7: { attackDamage: 55, critChance: 20, acceleration: 13, finalDamage: 6, shieldReduction: 13, healthReduction: 13 },
+  8: { attackDamage: 60, critChance: 22, acceleration: 14, finalDamage: 7, shieldReduction: 14, healthReduction: 14 },
+  9: { attackDamage: 65, critChance: 24, acceleration: 15, finalDamage: 8, shieldReduction: 15, healthReduction: 15 },
+};
 
 export function createInitialRuneLoadouts() {
   return RUNE_SLOTS.map((slot) => createEmptyRuneData(slot.value));
