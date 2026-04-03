@@ -5,6 +5,12 @@ import {
   RUNE_SLOTS,
   createInitialRuneLoadouts,
 } from './constants/calculator/runeConstants';
+import {
+  addNormalJewel,
+  createInitialJewelsState,
+  removeNormalJewel,
+  updateJewelField,
+} from './utils/jewelHelpers';
 import { TAB_OPTIONS } from './constants/calculator/mainConstants';
 import { UPGRADE_GROUPS } from './constants/calculator/spUpgradeConstants';
 import {
@@ -70,6 +76,11 @@ export default function LotteryDefenseCalculatorPage() {
     return savedState?.activeTab ?? 'main';
   });
 
+  const [jewels, setJewels] = useState(() => {
+    const savedState = loadSavedCalculatorState();
+    return createInitialJewelsState(savedState?.jewels);
+  });
+
   const [selectedUnitId, setSelectedUnitId] = useState(() => {
     const savedState = loadSavedCalculatorState();
     return savedState?.selectedUnitId ?? defaultUnit?.id ?? '';
@@ -115,6 +126,7 @@ export default function LotteryDefenseCalculatorPage() {
           spActiveGroupId,
           spInvestments,
           runeLoadouts,
+          jewels,
         })
       );
     } catch (error) {
@@ -223,6 +235,18 @@ export default function LotteryDefenseCalculatorPage() {
     });
   };
 
+  const updateJewel = (entryId, field, value) => {
+    setJewels((currentJewels) => updateJewelField(currentJewels, entryId, field, value));
+  };
+
+  const handleAddNormalJewel = () => {
+    setJewels((currentJewels) => addNormalJewel(currentJewels));
+  };
+
+  const handleRemoveNormalJewel = (entryId) => {
+    setJewels((currentJewels) => removeNormalJewel(currentJewels, entryId));
+  };
+
   const profileSummary = useMemo(() => {
     return calculateProfileStats({
       runeLoadouts: activeRune ? [activeRune] : [],
@@ -288,7 +312,14 @@ export default function LotteryDefenseCalculatorPage() {
         />
       )}
 
-      {activeTab === 'jewels' && <JewelsTab />}
+      {activeTab === 'jewels' && (
+        <JewelsTab
+          jewels={jewels}
+          updateJewel={updateJewel}
+          addNormalJewel={handleAddNormalJewel}
+          removeNormalJewel={handleRemoveNormalJewel}
+        />
+      )}
       {activeTab === 'buffs' && <BuffsTab />}
       {activeTab === 'presets' && (
         <PresetsTab

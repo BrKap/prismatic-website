@@ -4,6 +4,7 @@ import {
   RUNE_AWAKENING_OPTIONS,
   RUNE_BONUS_FIFTEEN_OPTIONS,
   RUNE_BONUS_TEN_OPTIONS,
+  RUNE_TRAN_OPTIONS,
   RUNE_ENCHANT_LEVEL_OPTIONS,
   RUNE_ENCHANT_ROWS,
   RUNE_ICON_BY_TYPE,
@@ -250,7 +251,19 @@ function RunePanelFrame({
             'rune-yellow-display'
           )}
         </div>
+
+        <div className="rune-bonus-row">
+          <div className="rune-bonus-label rune-yellow-text">@tran</div>
+          {renderCell(
+            'runeTran',
+            RUNE_TRAN_OPTIONS,
+            'rune-yellow-select',
+            'rune-yellow-display'
+          )}
+        </div>
       </div>
+
+
 
       <div className="rune-enchant-section">
         <div className="rune-enchant-title">Enchant</div>

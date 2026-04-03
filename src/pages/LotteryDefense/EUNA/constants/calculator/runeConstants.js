@@ -1,15 +1,9 @@
-import chaosRune from '../../images/runes/chaos.png';
-import cosmosRune from '../../images/runes/cosmos.png';
-import finalRune from '../../images/runes/final.png';
-import masterRune from '../../images/runes/master.png';
-import ultimateRune from '../../images/runes/ultimate.png';
-import winnerRune from '../../images/runes/winner.png';
+import { getRuneImage } from '../../images/imageImporter';
 import { STAT_KEYS } from './mainConstants';
 
 export const FLIP_DURATION_MS = 1000;
 
 export const RUNE_TYPES = [
-  { value: '', label: 'Select Rune' },
   { value: 'master', label: 'Master' },
   { value: 'ultimate', label: 'Ultimate' },
   { value: 'final', label: 'Final' },
@@ -84,6 +78,19 @@ export const RUNE_BONUS_FIFTEEN_OPTIONS = [
   { value: '50% debuff remove', label: '50% Debuff Removal' },
 ];
 
+export const RUNE_TRAN_OPTIONS = [
+  { value: 'None', label: 'None' },
+  { value: 'Every Race +1', label: 'Every Race +1' },
+  { value: '50% Crit Dmg', label: '50% Crit Dmg' },
+  { value: '15% Accel', label: '15% Accel' },
+  { value: '2x BaseCC', label: '2x BaseCC' },
+  { value: '-25% Armor', label: '-25% Armor' },
+  { value: '3 MC', label: '3 MC' },
+  { value: 'Max Grade +5', label: 'Max Grade +5' },
+  { value: '50% debuff remove', label: '50% Debuff Removal' },
+  { value: '15 AD on equip', label: '15 AD on equip' },
+];
+
 function makeOptions(values) {
   return values.map((value) => ({
     value: String(value),
@@ -112,12 +119,12 @@ export const RUNE_PINK_OPTIONS_BY_STAT = {
 };
 
 export const RUNE_ICON_BY_TYPE = {
-  master: masterRune,
-  ultimate: ultimateRune,
-  final: finalRune,
-  winner: winnerRune,
-  chaos: chaosRune,
-  cosmos: cosmosRune,
+  master: getRuneImage('master'),
+  ultimate: getRuneImage('ultimate'),
+  final: getRuneImage('final'),
+  winner: getRuneImage('winner'),
+  chaos: getRuneImage('chaos'),
+  cosmos: getRuneImage('cosmos'),
 };
 
 function buildRow({
@@ -439,12 +446,13 @@ export function createEmptyRuneData(slotValue) {
     id: `rune-${slotValue}`,
     slot: slotValue,
 
-    runeType: '',
+    runeType: 'Winner',
     runeLevel: '0',
     runeAwakening: 'None',
     runeRaceUpgrade: 'None',
     runeBonusTen: 'None',
     runeBonusFifteen: 'None',
+    runeTran: 'None',
 
     attackDamageBase: '10',
     attackDamageBonus: '0',

@@ -1,0 +1,211 @@
+.jewels-tab-layout {
+  display: grid;
+  gap: 1rem;
+}
+
+.jewels-section {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.jewels-section-header h4 {
+  margin: 0;
+  color: #dfe7f3;
+}
+
+.jewels-grid-layout {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 260px));
+  gap: 0.75rem;
+  justify-content: start;
+}
+
+.jewel-card {
+  border: 2px solid rgba(255, 255, 255, 0.14);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.04);
+  overflow: hidden;
+}
+
+.jewel-card-header {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 88px;
+  align-items: stretch;
+  min-height: 88px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.jewel-card-title-wrap {
+  display: grid;
+  align-content: center;
+  gap: 0.5rem;
+  padding: 0.9rem 1rem;
+}
+
+.jewel-card-title {
+  margin: 0;
+  color: #ea68ff;
+  font-size: 1.7rem;
+  font-weight: 800;
+  text-align: center;
+}
+
+.jewel-remove-button {
+  justify-self: center;
+  padding: 0.35rem 0.7rem;
+  border: 1px solid rgba(255, 95, 95, 0.4);
+  border-radius: 8px;
+  background: rgba(255, 65, 65, 0.12);
+  color: #ff7a7a;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.jewel-remove-button:hover {
+  background: rgba(255, 65, 65, 0.2);
+}
+
+.jewel-card-icon-shell {
+  display: grid;
+  place-items: center;
+  padding: 0.4rem;
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.jewel-card-icon {
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+}
+
+.jewel-card-icon-fallback {
+  width: 64px;
+  height: 64px;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+  font-size: 1.4rem;
+  font-weight: 800;
+}
+
+.jewel-card-body {
+  display: grid;
+}
+
+.jewel-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 86px;
+  align-items: center;
+  min-height: 40px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.jewel-row:last-child {
+  border-bottom: none;
+}
+
+.jewel-row-label {
+  padding: 0.4rem 0.9rem;
+  color: #f5ef79;
+  font-size: 0.95rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+.jewel-row-label--legendary {
+  color: #ff9447;
+}
+
+.jewel-row-label--upgrade {
+  color: #ff4a4a;
+}
+
+.jewel-row-value {
+  padding: 0.2rem 0.35rem;
+}
+
+.jewel-select {
+  width: 100%;
+  min-width: 0;
+  padding: 0.3rem 1.6rem 0.3rem 0.45rem;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  background-color: rgba(5, 10, 24, 0.95);
+  color: #f7ef77;
+  font-weight: 800;
+  text-align: center;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  cursor: pointer;
+  background-image:
+    linear-gradient(45deg, transparent 50%, #c8d1de 50%),
+    linear-gradient(135deg, #c8d1de 50%, transparent 50%);
+  background-position:
+    calc(100% - 11px) calc(50% - 2px),
+    calc(100% - 5px) calc(50% - 2px);
+  background-size: 6px 6px;
+  background-repeat: no-repeat;
+}
+
+.jewel-select option {
+  background: #151d2b;
+  color: #f5f7fb;
+}
+
+.jewel-select--upgrade {
+  color: #ff4a4a;
+}
+
+.jewel-static-value {
+  padding: 0.4rem 0.9rem;
+  font-weight: 800;
+  text-align: center;
+}
+
+.jewel-static-value--legendary {
+  color: #ff9447;
+}
+
+.jewel-add-card {
+  min-height: 220px;
+  display: grid;
+  place-items: center;
+  gap: 0.35rem;
+  border: 2px dashed rgba(126, 173, 255, 0.35);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.03);
+  color: #dfe7f3;
+  cursor: pointer;
+  transition: border-color 120ms ease, background 120ms ease, transform 120ms ease;
+}
+
+.jewel-add-card:hover {
+  border-color: rgba(126, 173, 255, 0.75);
+  background: rgba(126, 173, 255, 0.08);
+  transform: translateY(-1px);
+}
+
+.jewel-add-symbol {
+  font-size: 2.6rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.jewel-add-label {
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+@media (max-width: 700px) {
+  .jewel-card-header {
+    grid-template-columns: 1fr;
+  }
+
+  .jewel-card-icon-shell {
+    border-left: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+}

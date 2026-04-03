@@ -364,9 +364,12 @@ export function calculateRuneSourceStats(runeLoadouts = []) {
       );
     });
 
-    [rune.runeBonusTen, rune.runeBonusFifteen].forEach((bonusValue, bonusIndex) => {
-      const bonusStats = getRuneBonusStats(bonusValue, rune);
-      
+    [
+      { value: rune.runeBonusTen, label: '+10' },
+      { value: rune.runeBonusFifteen, label: '+15' },
+      { value: rune.runeTran, label: '@tran' },
+    ].forEach(({ value, label }) => {
+      const bonusStats = getRuneBonusStats(value, rune);
 
       Object.entries(bonusStats).forEach(([statKey, statValue]) => {
         const combineMode = applyRuneStat(result, statKey, statValue);
@@ -375,9 +378,9 @@ export function calculateRuneSourceStats(runeLoadouts = []) {
           createBreakdownEntry({
             source: 'runes',
             entryId: runeEntryId,
-            entryName: `${runeType} ${bonusIndex === 0 ? '+10' : '+15'} bonus`,
+            entryName: `${runeType} ${label} bonus`,
             statKey,
-            rawValue: bonusValue,
+            rawValue: value,
             appliedValue: statValue,
             combineMode,
           })
